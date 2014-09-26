@@ -2,10 +2,9 @@ Strings.js
 ==========
 
 A flexible, robust and powerful Javascript string manipulation library, packed with the usual suspects and loads of
-very handy additions, written for myself, available for all.
+very handy additions, written in Coffeescript, available for all.
 
 String.prototype is not affected by Strings.js
-
 
 General description:
 --------------------
@@ -16,13 +15,16 @@ in most functions. -1 references the last character in the string, 1 references 
 The `new Strings()` object is made for chaining operations on strings. Most methods return their own context by default.
 To return the actual value of the string, one can use `someString.get()` or `someString.$` or `someString.string`.
 
-All input and output is checked for type validity, so the output is in pretty much all cases 'type correct'.
+Because it's all runtime with JS, you'll want your code to be pretty much 'unbreakable'. Therefore, all input and
+output is checked for type validity. So, if you expect a `typeof 'string'`, you wont get `undefined` or any other
+type that can break following code.
 
 Almost all functionality of Strings prototypes, and some extra functions, are available from Strings static
 function library.
 
 Strings.js depends on Types.js, which is included in strings.min.js. Types.js and the other included tools can be
-used as static methods from Strings. Descriptions for all included methods can be found in the API below.
+used as static methods from Strings. Descriptions for all included methods can be found in the API below. The Types.js
+API can be found in the phazelift/Types.js repo.
 
 Some examples:
 ------------
@@ -454,9 +456,9 @@ ___________________
 Inherited functions
 -------------------
 
-_______________
-**From Chars:**
-_______________
+_________________
+**From Chars.js**		( to be found in the phazelift repo's now or soon )
+_________________
 
 **Strings.ASCII_RANGE_UPPERCASE**
 
@@ -502,9 +504,9 @@ _______________
 
 > Returns true if char is a letter.
 
-__________________
-**From Tools**
-__________________
+_________________
+**From Tools.js**	( to be found in the phazelift repo's now or soon )
+_________________
 
 
 **Strings.inRange**
@@ -528,9 +530,9 @@ __________________
 > Returns a positive, 0 based index from a 1 based index positive or negative. If index is negative then
 > it`s relative inverse (positive) number will be returned. If index is 0 or exceeding range, false is returned.
 
-__________________
-**From Types.js**
-__________________
+_________________
+**From Types.js**	( to be found in phazelift repo's now or soon )
+_________________
 
 **Types.js**
 > The entire (1.2kb minified) library is included in Strings.js. Check the repo for general info and API.
