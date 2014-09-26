@@ -29,11 +29,10 @@ Some examples:
 ```javascript
 
 // all comments reflect the value of s.string, except for .wrap
-
 var s= new Strings( 'HELLO', ' ', 'STRINGS!' );		// HELLO STRINGS! (combine on create)
 
 s.lower('ello', 'trings').insert(' library', -1);	// Hello Strings library!
-s.lower('h').toCamel(' ').remove('!');					// helloStringsLibrary
+s.lower('h').toCamel(' ').remove('!');				// helloStringsLibrary
 s.unCamel(' ').upper(1, 7).push('!');				// Hello Strings library!
 s.remove('Hello', 'library', ' ');					// Strings!
 s.shift('reversed ').reverse();						// !sgnirtS desrever
@@ -49,7 +48,6 @@ s.get(88, 3, 4, 99);								// <3 (88 and 99 are out of range and thus ignored)
 
 // Static Methods
 // all comments reflect the value of s, except for Strings.split()
-
 s= '      spaces        or tabs     in here?      ';//        spaces        or tabs     in here?
 s= Strings.replace( s, 'not in s', 'ignored..' ); 	//        spaces        or tabs     in here?
 array= Strings.split( s+ '\t\t  \t sparse?' );      // [ 'spaces', 'or', 'tabs', 'in', 'here?', 'sparse?' ]
@@ -93,9 +91,9 @@ API
 > type String or Number will not be set.
 
 **Strings.prototype.xs**
-> `xs( function(char, index){} )`
+> `xs( callback(char, index){} )`
 
-> Access every index of this.string and apply the result of callback to it.
+> Access every index of this.string and apply the result of the callback to it.
 
 > If the callback returns true, char is applied. If the callback returns false or undefined, char will be skipped.
 > Any character, String or Number returned by callback will be applied to index in string.
@@ -318,11 +316,12 @@ API
 > Returns this.string wrapped by the text set with setWrap(). If setWrap() has not been called yet, only this.string
 > will return.
 
+________________
 Static functions
 ----------------
 
-See descriptions for similar functions above..
-
+See descriptions for similar functions above.
+______________________________________________
 
 **Strings.create**
 > `Strings.create( string,  [string1, ..., stringN] )`
@@ -340,8 +339,6 @@ See descriptions for similar functions above..
 
 **Strings.empty**
 > `Strings.empty( string )`
-
-> In addition to Strings.prototype.empty; returns false if string is not of type String.
 
 **Strings.isAlpha**
 > `Strings.isAlpha( string,  [string1, ..., stringN] )`
@@ -506,7 +503,7 @@ _______________
 > Returns true if char is a letter.
 
 __________________
-**From _ (Tools)**
+**From Tools**
 __________________
 
 
@@ -536,4 +533,4 @@ __________________
 __________________
 
 **Types.js**
-> The entire (1.2kb) library is included in Strings.js. Check the repo for general info and API.
+> The entire (1.2kb minified) library is included in Strings.js. Check the repo for general info and API.
