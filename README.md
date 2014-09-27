@@ -1,10 +1,12 @@
-Strings.js
+strings.js
 ==========
 
 A flexible, robust and powerful Javascript string manipulation library, packed with the usual suspects and loads of
 very handy additions, written in Coffeescript, available for all.
 
-String.prototype is not affected by Strings.js
+String.prototype is not affected by strings.js
+
+You can also install with `npm install strings.js`
 
 General description:
 --------------------
@@ -22,13 +24,15 @@ type that can break following code.
 Almost all functionality of Strings prototypes, and some extra functions, are available from Strings static
 function library.
 
-Strings.js depends on Types.js, which is included in strings.min.js. Types.js and the other included tools can be
+strings.js depends on Types.js, which is included in strings.min.js. Types.js and the other included tools can be
 used as static methods from Strings. Descriptions for all included methods can be found in the API below. The Types.js
 API can be found in the phazelift/Types.js repo.
 
 Some examples:
 ------------
 ```javascript
+
+var Strings= require("strings.js");							// with node.js
 
 // all comments reflect the value of s.string, except for .wrap
 var s= new Strings( 'HELLO', ' ', 'STRINGS!' );		// HELLO STRINGS! (combine on create)
@@ -535,4 +539,4 @@ _________________
 _________________
 
 **Types.js**
-> The entire (1.2kb minified) library is included in Strings.js. Check the repo for general info and API.
+> The entire (1.2kb minified) library is included in strings.js. Check the repo for general info and API.
