@@ -6,7 +6,7 @@ very handy additions, written in Coffeescript, available for all.
 
 String.prototype is not affected by strings.js
 
-For use with node.js you can install with `npm install strings.js`
+Made for browser and/or node.js. You can use `npm install strings.js` if you like.
 
 General description:
 --------------------
