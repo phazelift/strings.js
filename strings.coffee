@@ -409,7 +409,7 @@ class Strings extends Chars
 
 	pop: ( amount ) -> @string= Strings.pop @string, amount; @
 
-	shift: -> @string= Strings.create.apply( @, arguments )+ @string; @
+	prepend: -> @string= Strings.create.apply( @, arguments )+ @string; @
 
 	insert: ( string, position ) -> @string= Strings.insert @string, string, position; @
 

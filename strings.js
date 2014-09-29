@@ -827,7 +827,7 @@
       return this;
     };
 
-    Strings.prototype.shift = function() {
+    Strings.prototype.prepend = function() {
       this.string = Strings.create.apply(this, arguments) + this.string;
       return this;
     };

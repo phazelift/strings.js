@@ -43,12 +43,12 @@ s.lower('ello', 'trings').insert(' library', -1);	// Hello Strings library!
 s.lower('h').toCamel(' ').remove('!');				// helloStringsLibrary
 s.unCamel(' ').upper(1, 7).push('!');				// Hello Strings library!
 s.remove('Hello', 'library', ' ');					// Strings!
-s.shift('reversed ').reverse();						// !sgnirtS desrever
+s.prepend('reversed ').reverse();						// !sgnirtS desrever
 s.shuffle();										// getriever!nrss dS (random on every run)
 s.set();											// (.set with no usable argument wipes the string)
 
 // let's get a little more funky:
-s.set('scgbnaicrbtas').shift('!').upper(-1)
+s.set('scgbnaicrbtas').prepend('!').upper(-1)
 	.remove('a', 'b', 'c').reverse();				// Strings!
 s.setWrap( '<3 ' ).wrap;							// <3 Strings! (.wrap only returns the wrapped string, this.string is still <3)
 s.applyWrap( 'I ', '!' ).get(88, 3, 4, 99);			// <3 (88 and 99 are out of range and thus ignored)
@@ -177,8 +177,8 @@ API
 > 	Removes amount characters starting from the end of this.string going backwards, no arguments pops only one
 > character.
 
-**Strings.prototype.shift**
-> `<this> shift ( <string>/<number> string, [string1, ..., stringN] )`
+**Strings.prototype.prepend**
+> `<this> prepend ( <string>/<number> string, [string1, ..., stringN] )`
 
 > 	Prepend this.string with string(s).
 
