@@ -11,7 +11,7 @@ Made for browser and/or node.js. You can use `npm install strings.js` if you lik
 General description:
 --------------------
 
-strings.js is ROCK-SOLID! Almost any `<string>` type argument accepts `<number>` type as well, and will be parsed correctly
+strings.js is ROBUST!. Almost any `<string>` type argument accepts `<number>` type as well, and will be parsed correctly
 if possible. If not, an empty string will be returned or used for processing. All input and output is checked for type
 validity. If you expect a `typeof 'string'`, you won't get `undefined` or any other type that can break following code.
 
