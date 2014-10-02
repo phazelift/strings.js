@@ -1,4 +1,4 @@
-# Strings.coffee - My Javascript string manipulation library, written in Coffeescript.
+# strings.coffee - My Javascript string manipulation library, written in Coffeescript.
 #
 # Copyright (c) 2014 Dennis Raymondo van der Sluis
 #
@@ -148,10 +148,10 @@ class Chars extends _
 
 #																	Strings
 
-# refactor this later, and get rid of the..., arguments[n] are ~10 times faster.
+# refactor this later, and get rid of the ..., arguments[n] are ~10 times faster.
 changeCase= ( string= '', caseMethod, args... ) ->
 	return string if _.notString string
-	if args.length < 1
+	if (args.length < 1) or args[0] is undefined
 		return string[ caseMethod ]()
 	else if _.isNumber( args[0] ) then for arg in args
 		pos= _.positiveIndex( arg, string.length )
@@ -407,9 +407,9 @@ class Strings extends Chars
 
 	push: ->	@string= @string+ Strings.create.apply @, arguments; @
 
-	pop: ( amount ) -> @string= Strings.pop @string, amount; @
-
 	prepend: -> @string= Strings.create.apply( @, arguments )+ @string; @
+
+	pop: ( amount ) -> @string= Strings.pop @string, amount; @
 
 	insert: ( string, position ) -> @string= Strings.insert @string, string, position; @
 
@@ -472,6 +472,7 @@ class Strings extends Chars
 		return @
 
 # aliases:
+Strings.Numbers= Numbers
 Strings.crop= Strings.slice
 
 if window? then window.Strings= Strings

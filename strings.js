@@ -286,7 +286,7 @@
     if (_.notString(string)) {
       return string;
     }
-    if (args.length < 1) {
+    if ((args.length < 1) || args[0] === void 0) {
       return string[caseMethod]();
     } else if (_.isNumber(args[0])) {
       for (_i = 0, _len = args.length; _i < _len; _i++) {
@@ -822,13 +822,13 @@
       return this;
     };
 
-    Strings.prototype.pop = function(amount) {
-      this.string = Strings.pop(this.string, amount);
+    Strings.prototype.prepend = function() {
+      this.string = Strings.create.apply(this, arguments) + this.string;
       return this;
     };
 
-    Strings.prototype.prepend = function() {
-      this.string = Strings.create.apply(this, arguments) + this.string;
+    Strings.prototype.pop = function(amount) {
+      this.string = Strings.pop(this.string, amount);
       return this;
     };
 
@@ -977,6 +977,8 @@
     return Strings;
 
   })(Chars);
+
+  Strings.Numbers = Numbers;
 
   Strings.crop = Strings.slice;
 
