@@ -1,34 +1,44 @@
 strings.js
 ==========
 
-A flexible, robust and powerful Javascript string manipulation library, packed with the usual suspects and loads of
-very handy additions, written in Coffeescript, available for all.
+A flexible, robust and powerful Javascript string manipulation library. Contains the usual suspects and loads of
+very handy additions. Written for myself, as I wanted some solid fundaments to build upon. There are more string
+manipulation libs out there, but for many reasons I don't like them.. I expect not to be that unique, so give
+strings.js a try, it's pretty cool and you might prefer it above the others as well!
 
 String.prototype is not affected by strings.js
-
+<br/>
+<br/>
+___
+<br/>
 Made for browser and/or node.js. You can use `npm install strings.js` if you like.
-
+<br/>
+<br/>
+___
 General description:
 --------------------
 
-strings.js is ROBUST!. Almost any `<string>` type argument accepts `<number>` type as well, and will be parsed correctly
-if possible. If not, an empty string will be returned or used for processing. All input and output is checked for type
-validity. If you expect a `typeof 'string'`, you won't get `undefined` or any other type that can break following code.
+Because strings.js is build upon types.js it is very robust. Almost any String type argument accepts a Number type and vice versa.
+All input and output is checked for type validity. If you expect a `typeof 'string'`, you won't get `undefined` or
+any other type that can break following code.
 
-All string indexes in strings.js are 1 based and translated to 0 based internally. Negative indexes can be used
-in most functions. -1 references the last character in the string, 1 references the first character in the string.
+IMHO we shouldn't accept n-1 for strings in Javascript, it sucks and is not necessary.
+All string indexes in strings.js are 1 based and translated to 0 based internally. Negative indexes can be used in most functions. -1 references
+the last character in the string, 1 references the first character in the string.
 
-The `new Strings()` object is made for chaining operations on strings. Most methods return their own context by default.
-To return the actual value of the string, one can use `someString.get()` or `someString.$` or `someString.string`.
+The `new Strings()` object is made for chaining operations on strings, most of it's methods return their own context.
+To return the actual value of the string, one can use `.get()` or `.$` or `.string`.
 
 Almost all functionality of Strings prototypes, and some extra functions, are available from Strings static
 function library.
 
-strings.js depends on types.js, which is included in strings.min.js. types.js and the other included tools can be
-used as static methods from Strings. Descriptions for all included methods can be found in the API below. The types.js
-API can be found in the phazelift/types.js repo.
+types.js is included in strings.js as it is the fundament for strings.js. types.js and some other included tools
+can be used as static methods from Strings. Descriptions for all included methods can be found in the API below.
+The types.js API can be found in the phazelift/types.js repo.
 
-I expect typo's in this README.md as I don't have the time to make it waterproof, please let me know if you found some, thx.
+I hope to give some better and more detailed examples later when I have time available for that. I am Also still working
+on the API.. For now I recommend to check the Jasmine tests to see what strings.js is capable of, and do some fun
+experiments yourself of course.
 
 Some examples:
 ------------
@@ -82,9 +92,15 @@ ___
 API
 ---
 
+In this API, the type of a dynamic Strings object is denoted with `<this>`. Therefore, all methods returning
+`<this>` can be used for chaining.
 
+this.string represents the actual state of the internal dynamic string.
+
+This API is still a work in progress.
+____
 **Strings** constructor
-> `Strings( <string>/<number> string,  [string1, ..., stringN] )`
+> `<this> Strings( <string>/<number> string,  [string1, ..., stringN] )`
 
 > Calls .set internally, so .set rules apply.
 
@@ -185,7 +201,9 @@ API
 **Strings.prototype.insert**
 > `<this> insert ( <string>/<number> insertion, <string>/<number> position= 1 )`
 
-> 	Insert insertion at position in this.string, the insertion will be inserted before the character at position.
+> Insert insertion at position in this.string, the insertion will be inserted before the character at position.
+> If insert is invalid, or index is less than the negative length of the string, insertion will be prepended to the string.
+> If position is greater than the length of the string, insertion will be appended to the string.
 
 **Strings.prototype.trim**
 > `<this> trim()`
@@ -216,9 +234,11 @@ API
 >	Applies this.trim() and this.oneSpace() on this.string.
 
 **Strings.prototype.find**
-> `<array> find( <string>/<number> substring )`
+> `<array> find( <string>/<number> substring, <string> flags )`
 
-> 	Returns an array containing all indexes where substring is found, or an empty array if there is no match.
+> Returns an array containing all indexes where substring is found, or an empty array if there is no match.
+> If flags is set to an empty string, only the first occurance of the found substring will be pushed into the array.
+> find internally uses RegExp, so flags is 100% compatible with RegExp flags.
 
 **Strings.prototype.count**
 > `<number> count( <string>/<number> substring )`
@@ -255,9 +275,9 @@ API
 > - Arguments are substrings - Remove all found/matching strings given as arguments from this.string.
 
 **Strings.prototype.removeRange**
-> `<this> removeRange( <string>/<number> index, <string>/<number> amount )`
+> `<this> removeRange( <string>/<number> index, <string>/<number> amount= 1 )`
 
-> 	Removes amount character(s) from this.string, starting from index.
+> Removes amount character(s) from this.string, starting from index.
 
 **Strings.prototype.removePos**
 > `<this> removePos( <string>/<number> positions, [pos1, ..., posN] )`
@@ -347,17 +367,17 @@ Static functions
 See descriptions for similar functions above.
 ______________________________________________
 
-**Strings.force**
-> `<string> Strings.force( <anyType> string, <string>/<number> replacement )`
-
-> Returns/Forces string to be of type string. If conversion is not possible, replacement will be returned. If
-> replacements cannot be converted to <string>, an empty string '' will be returned.
-
 **Strings.create**
 > `<string> Strings.create( <string>/<number> string,  [string1, ..., stringN] )`
 
 > Returns an assembled string from given arguments of type String. Non String arguments are omitted.
 > If no valid arguments are given, an empty string will be returned.
+
+**Strings.get**
+> `<string> Strings.get( <string>/<number> string, [<number> position1, ..., positionN] )`
+
+> Returns a string containing every position from string given, in the order they were given.
+> Invalid positions are ignored and won't disrupt the process.
 
 **Strings.random**
 > `<string> Strings.random( <string>/<number> amount= 1, <array> asciiRange= Chars.ASCII_RANGE_ALL )`
@@ -424,7 +444,7 @@ ______________________________________________
 > `<string> Strings.shuffle( <string>/<number> string )`
 
 **Strings.find**
-> `<array> Strings.find( <string>/<number> string, <string>/<number> query )`
+> `<array> Strings.find( <string>/<number> string, <string>/<number> query, <string> flags )`
 
 **Strings.count**
 > `<number> Strings.count( <string>/<number> string, <string>/<number> query )`
@@ -451,18 +471,13 @@ ______________________________________________
 > `<array> Strings.split( <string>/<number> string, <string>/<number> delimiter )`
 
 > Warning, this is a custom .split. It splits the string into an array by delimiter, with the difference
-> that it destroys spaces and empty strings to avoid ending up with a sparse array.
+> that it destroys spaces, tabs, line-feeds, carriage-returns and skips empty strings to avoid ending up with a
+> sparse array.
 
-> The default delimiter is a (white)space.
+> The default delimiter is a (white)space. delimiter is truncated to 1 character.
 
 **Strings.reverse**
 > `<string> Strings.reverse( <string>/<number> string )`
-
-**Strings.upper**
-> `<string> Strings.upper( <string> string, <string>/<number> args [args1, ..., argsN] )`
-
-**Strings.lower**
-> `<string> Strings.lower( <string> string, <string>/<number> args [args1, ..., argsN] )`
 
 **Strings.insert**
 > `<string> Strings.insert( <string>/<number> string, <string>/<number> index, <string>/<number> insertion )`
@@ -496,7 +511,7 @@ Inherited functions
 -------------------
 
 _________________
-**From chars.js**		( to be found in the phazelift repo's now or soon )
+**From chars.js**		( to be found in the phazelift repositories )
 _________________
 
 **Strings.ASCII_RANGE_UPPERCASE**
@@ -554,7 +569,7 @@ _________________
 > Returns a random character within the given asciiRange. See format above.
 
 _________________
-**From tools.js**	( to be found in the phazelift repo's now or soon )
+**From tools.js**	( to be found in the phazelift repositories now or soon )
 _________________
 
 
@@ -589,4 +604,4 @@ _________________
 _________________
 
 **types.js**
-> The entire (1.3kb minified) library is included in strings.js. Check the repo for general info and API.
+> The entire library is included in strings.js. Check the repo for general info and API.
