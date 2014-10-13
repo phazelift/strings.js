@@ -84,6 +84,10 @@ s= Strings.random( 10, Strings.ASCII_RANGE_NUMBERS );
 													// 6206002371	(create random string in specific range)
 // etc...
 
+// The included libs/tools. Most methods can be directly used from Strings, only a few specific overloaded methods.
+Types= require("strings.js").Types;
+Chars= require("strings.js").Chars;
+
 // When I have a little time available I will try to update the examples to have it more meaningful and elaborate.
 // For now, check the API, there's a lot more!
 
@@ -479,6 +483,12 @@ ______________________________________________
 **Strings.reverse**
 > `<string> Strings.reverse( <string>/<number> string )`
 
+**Strings.upper**
+> `<string> Strings.upper( <string> string, <string>/<number> args [args1, ..., argsN] )`
+
+**Strings.lower**
+> `<string> Strings.lower( <string> string, <string>/<number> args [args1, ..., argsN] )`
+
 **Strings.insert**
 > `<string> Strings.insert( <string>/<number> string, <string>/<number> index, <string>/<number> insertion )`
 
@@ -605,3 +615,28 @@ _________________
 
 **types.js**
 > The entire library is included in strings.js. Check the repo for general info and API.
+
+
+__________
+
+change log
+==========
+
+**1.1.3**
+
+Added Jasmine tests for the static part of the library. The dynamic part was thorougly tested already, but I hope
+to add soon some tests for that as well.
+
+types.js included in strings.js is updated to the latest version now.
+
+Many little enhancements and a few minor bug fixes.
+
+Added:
+- Strings.get().
+
+Removed:
+
+- Strings.force, as force is now implemented in types.js. Use Strings.forceString, or the other force'Types'
+from types.js.
+
+__________
