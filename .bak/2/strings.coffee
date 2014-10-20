@@ -17,7 +17,7 @@
 
 "use strict"
 
-#														types.coffee (types.js v1.2.8)
+#														types.coffee (types.js v1.2.5)
 
 Types=
 	parseIntBase: 10
@@ -36,11 +36,11 @@ createForce= ( type ) ->
 		switch type
 			when 'Number' then return value if Types.notNaN value= parseInt value, Types.parseIntBase
 			when 'String' then return value+ '' if Types.isStringOrNumber value
-			else return value if Types[ 'is'+ type ] value
+			else return value if Types.typeof( value ) is type.toLowerCase()
 		return false
 
 	return ( value, replacement= value ) ->
-		return value if false isnt value= convertType value
+		return value if Types[ 'is'+ type ] value
 		return replacement if false isnt replacement= convertType replacement
 		return literals[ type ]
 
@@ -91,7 +91,7 @@ mapStringToNumber= ( array ) ->
 		array[ index ]= nr
 	return array.length
 
-#															_ (selection of tools.js)
+#															_ (selection of Tools)
 
 class _ extends Types
 
@@ -100,9 +100,8 @@ class _ extends Types
 		return (nr >= range[0]) and (nr <= range[1])
 
 	@limitNumber= ( nr, range ) ->
-		nr= _.forceNumber nr
-		return nr if mapStringToNumber( range ) < 2
-		return range[0] if nr < range[0]
+		return 0 if mapStringToNumber( range ) < 2
+		return range[0] if ( _.isNaN nr= parseInt nr, 10 ) or ( nr < range[0] )
 		return range[1] if nr > range[1]
 		return nr
 
@@ -124,13 +123,13 @@ class _ extends Types
 
 	@positiveIndex: ( index, max ) ->
 		return false if 0 is index= _.forceNumber index
-		max= Math.abs _.forceNumber max
+		max= _.forceNumber max
 		if Math.abs( index ) <= max
 			return index- 1 if index > 0
 			return max+ index
 		return false
 
-#																	Chars (selection of chars.js)
+#																	Chars (selection of Chars)
 
 class Chars extends _
 
@@ -149,11 +148,11 @@ class Chars extends _
 
 	@isAlpha		: ( char ) -> Chars.isUpper(char) or Chars.isLower(char)
 	@isNumeric	: ( char ) -> _.inRange Chars.ordinal(char), Chars.ASCII_RANGE_NUMBERS
-	@isSpecial	: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_ALL ) and not ( Chars.isAlphaNumeric(char) or (char is ' ') )
+	@isSpecial	: ( char ) -> not ( Chars.isAlphaNumeric(char) or (char is ' ') )
 	@isAlphaNumeric: ( char ) -> Chars.isAlpha(char) or Chars.isNumeric(char)
 
-	@random: ( range ) ->
-		range= _.forceArray range, Chars.ASCII_RANGE_ALL
+	@random: ( range= Chars.ASCII_RANGE_ALL ) ->
+		return '' if _.notArray(range) or range.length < 2
 		min= _.limitNumber( range[0], range )
 		max= _.limitNumber( range[1], range )
 		return Chars.ascii _.randomNumber min, max
@@ -162,7 +161,7 @@ class Chars extends _
 
 # refactor this later, and get rid of the ..., arguments[n] are ~10 times faster.
 changeCase= ( string= '', caseMethod, args... ) ->
-	return string if '' is string= _.forceString string
+	return string if _.notString string
 	if (args.length < 1) or args[0] is undefined
 		return string[ caseMethod ]()
 	else if _.isNumber( args[0] ) then for arg in args
@@ -182,21 +181,13 @@ asciiStringType= ( string, method ) ->
 
 class Strings extends Chars
 
+	@force: ( string, replacement ) -> _.forceString string, replacement
+
 	@create: ->
 		string= ''
-		string+= _.forceString( arg ) for arg in arguments
+		for arg in arguments
+			string+= arg if _.isStringOrNumber arg
 		return string
-
-	@get: ( string, positions... ) ->
-		return '' if arguments.length < 2
-		string	= _.forceString string
-		length	= string.length
-		result	= ''
-		argsLength= arguments.length
-		for pos in [1..argsLength]
-			pos= _.positiveIndex arguments[pos], length
-			result+= string[ pos ] if pos isnt false
-		return result
 
 	@random: ( amount, charSet ) ->
 		amount= _.forceNumber amount, 1
@@ -205,7 +196,7 @@ class Strings extends Chars
 		return string;
 
 	@times: ( string, amount ) ->
-		return '' if '' is string= _.forceString string
+		return '' if '' is _.forceString string
 		amount= _.forceNumber amount, 1
 		multi= ''
 		multi+= string while amount-- > 0
@@ -213,6 +204,8 @@ class Strings extends Chars
 
 	@regEscape: ( string ) ->
 		return string if '' is string= _.forceString string
+		# not sure now if number-to-string is right here..
+		# return '' if _.notString string
 		return Strings.xs string, ( char ) ->
 			return '\\'+ char	if char in Chars.REGEXP_SPECIAL_CHARS
 			return true
@@ -228,11 +221,10 @@ class Strings extends Chars
 
 	@isSpace: ( string ) -> /^[ \t]+$/g.test string
 
-	@xs: ( string= '', callback ) ->
-		string= _.forceString string
-		return '' if -1 is length= string.length- 1
-		callback	= _.forceFunction callback, (char) -> char
+	@xs: ( string= '', callback= (char) -> char ) ->
+		return '' if _.notString(string) or _.notFunction(callback)
 		result= ''
+		return result if (length= string.length- 1) < 0
 		for index in [0..length]
 			if response= callback( string[index], index )
 				if response is true then result+= string[ index ]
@@ -241,17 +233,19 @@ class Strings extends Chars
 		return result
 
 	@copy: ( string, offset, amount ) ->
+		return '' if '' is string= _.forceString string
+		return string if not offset?
 		offset= _.forceNumber offset
-		return '' if ( '' is string= _.forceString string ) or ( Math.abs(offset) > string.length )
-		offset-= 1 if offset > 0
-		return string.substr offset, _.forceNumber amount, string.length
+		return '' if Math.abs(offset) > string.length
+		--offset if offset > 0
+		return string.substr offset, _.forceNumber( amount, 1 )
 
 	@replace: ( string= '', toReplace= '', replacement= '', flags= 'g' ) ->
-		if not ( _.isStringOrNumber(string) and (_.typeof( toReplace ) in [ 'string', 'number', 'regexp' ]) )
+		if not ( _.isStringOrNumber(string) and ( (toReplaceIsString= _.isStringOrNumber(toReplace)) or _.isRegExp(toReplace)) )
 			return _.forceString string
-		if _.notRegExp toReplace
-			toReplace= Strings.regEscape (toReplace+ '')
-			toReplace= new RegExp toReplace, flags	# check if needed -> _.forceString flags
+		if toReplaceIsString
+			toReplace= Strings.regEscape(toReplace+ '')
+			toReplace= new RegExp toReplace, flags
 		return (string+ '').replace toReplace, replacement
 
 	@trim: ( string ) -> Strings.replace string, /^\s+|\s+$/g
@@ -260,44 +254,39 @@ class Strings extends Chars
 
 	@trimRight: ( string ) -> Strings.replace string, /\s+$/g
 
-	@oneSpace: ( string ) -> Strings.replace string, /\s+/g, ' '
+	@oneSpace: ( string ) -> Strings.replace string, /([ \t]+)/g, ' '
 
 	@oneSpaceAndTrim: ( string ) -> Strings.oneSpace( Strings.trim(string) )
 
-	@toCamel: ( string, char ) ->
+	@toCamel: ( string, char= '-' ) ->
 		string= _.forceString string
-		char	= _.forceString char, '-'
+		char	= _.forceString char
 		match	= new RegExp( Strings.regEscape( char )+ '([a-z])', 'ig' )
 		Strings.replace string, match, (all, found) -> found.toUpperCase()
 
-	@unCamel: ( string, insertion ) ->
+	@unCamel: ( string, insertion= '-' ) ->
 		string	= _.forceString string
-		insertion= _.forceString insertion, '-'
+		insertion= _.forceString insertion
 		return Strings.replace( string, /([A-Z])/g, insertion+ '$1' ).toLowerCase()
 
 	@shuffle: ( string ) ->
 		string= _.forceString string
 		return _.shuffleArray( (string+ '').split '' ).join('')
 
-	@find: ( string, toFind, flags ) ->
+	@find: ( string, toFind ) ->
 		indices= []
 		return indices if '' is string= _.forceString string
-		flags= _.forceString flags, 'g'
 		if _.isStringOrNumber toFind
-			toFind= new RegExp Strings.regEscape(toFind+ ''), flags
+			toFind= new RegExp( (Strings.regEscape toFind+ ''), 'g' )
 		else if _.isRegExp toFind
-			toFind= new RegExp toFind.source, flags
+			toFind= new RegExp toFind.source, 'g'
 		else return indices
-		# check for global flag, without it a while/exec will hang the system..
-		if toFind.global
-			indices.push( result.index+ 1 ) while result= toFind.exec string
-		else
-			indices.push( result.index+ 1 ) if result= toFind.exec string
+		indices.push( result.index+ 1 ) while result= toFind.exec string
 		return indices
 
 	@count: ( string, toFind ) -> Strings.find( string, toFind ).length
 
-	@contains: ( string, substring ) -> Strings.count( string, substring ) > 0
+	@contains: ( string, substring ) -> Strings.find( string, substring ).length > 0
 
 	@between: ( string, before, after ) ->
 		return '' if not _.allStringOrNumber string, before, after
@@ -308,7 +297,7 @@ class Strings extends Chars
 
 	@slice: ( string, start, size ) ->
 		string= _.forceString string
-		start	= _.forceNumber (start or 1)
+		start	= _.forceNumber start
 		if false isnt start= _.positiveIndex start, string.length
 			size= _.forceNumber size
 			return string.slice start, start+ size
@@ -327,13 +316,12 @@ class Strings extends Chars
 
 	@split: ( string, delimiter ) ->
 		string= Strings.oneSpaceAndTrim string
-		result= []
-		return result if string.length < 1
 		delimiter= _.forceString delimiter, ' '
-		array= string.split delimiter[0] or ''
-		for word in array
-			continue if word.match /^\s$/
-			result.push Strings.trim word
+		result= []
+		array= string.split delimiter
+		for index in array
+			continue if index is ''
+			result.push index
 		return result
 
 	@reverse: ( string= '' ) ->
@@ -348,20 +336,17 @@ class Strings extends Chars
 	@lower: ( string, args...) -> changeCase string, 'toLowerCase', args...
 
 	@insert: ( string, insertion, index= 1 ) ->
-		string	= _.forceString string
+		string= _.forceString string
 		insertion= _.forceString insertion
-		index		= _.forceNumber index
-		return string+ insertion if index > string.length
-		index		= _.positiveIndex index, string.length
-		index		= 0 if index is false
+		return string if false is index= _.positiveIndex index, string.length
 		return string.substr( 0, index )+ insertion+ string.substr index
 
 	@removeRange: ( string, offset, amount ) ->
-		string= _.forceString string
-		return string if ( string is '' ) or
-			( false is offset= _.positiveIndex offset, string.length )	or
-			( 0 > amount= _.forceNumber amount, 1 )
-		endpoint= offset+ amount
+		return string if '' is string= _.forceString string
+		return string if false is offset= _.positiveIndex offset, string.length
+		amount= _.forceNumber amount, 1
+		if amount < 0 then endpoint= offset+ _.positiveIndex amount, string.length- offset
+		else endpoint= offset+ amount
 		return Strings.xs string, ( char, index ) ->
 			true if (index < offset) or (index >= endpoint)
 
@@ -382,7 +367,7 @@ class Strings extends Chars
 		ending= new RegExp Strings.regEscape( ending )+ '$'
 		return ending.test string
 
-# test below this line:
+
 	@wrap: ( prepend= '', append= '' ) ->
 		wrapper= ( string ) -> Strings.create prepend, string, append
 		wrapper.wrap= ( outerPrepend= '', outerAppend= '' ) ->
@@ -394,7 +379,14 @@ class Strings extends Chars
 
 	constructor: ->
 		@set.apply @, arguments
+		Object.defineProperty @, '$', { get: -> @.get() }
+		Object.defineProperty @, 'length', { get: -> @string.length }
+		Object.defineProperty @, 'wrap',
+			get: ->
+				return @wrapMethod @string	if not _.isNull @wrapMethod
+				return @string
 		@wrapMethod= null
+		@crop= @slice
 
 	set: -> @string= Strings.create.apply @, arguments; @
 
@@ -490,18 +482,7 @@ class Strings extends Chars
 		@removeWrap()
 		return @
 
-Object.defineProperty Strings::, '$', { get: -> @.get() }
-Object.defineProperty Strings::, 'length', { get: -> @string.length }
-Object.defineProperty Strings::, 'wrap',
-	get: ->
-		return @wrapMethod @string	if not _.isNull @wrapMethod
-		return @string
-
-
 # aliases:
-Strings::crop= Strings::slice
-Strings.Types= Types
-Strings.Chars= Chars
 Strings.crop= Strings.slice
 
 if window? then window.Strings= Strings
