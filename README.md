@@ -624,7 +624,7 @@ change log
 
 **1.1.4**
 
-Updated types.js to version 1.3.3
+Updated types.js to version 1.3.4
 
 **1.1.3**
 
