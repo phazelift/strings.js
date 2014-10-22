@@ -622,6 +622,10 @@ __________
 change log
 ==========
 
+**1.1.4**
+
+Updated types.js to version 1.3.3
+
 **1.1.3**
 
 Added Jasmine tests for the static part of the library. The dynamic part was thorougly tested already, but I hope

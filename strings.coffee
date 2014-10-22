@@ -17,7 +17,7 @@
 
 "use strict"
 
-#														types.coffee (types.js v1.2.8)
+#														types.coffee (types.js v1.3.4)
 
 Types=
 	parseIntBase: 10
@@ -64,6 +64,7 @@ typesPredicates=
 	'Date'			: (value) -> (typeof value is 'object') and (value instanceof Date)
 	'Object'			: (value) -> (typeof value is 'object') and not (value instanceof Array) and not (value instanceof RegExp) and not (value instanceof Date) and not (value is null)
 	'NaN'				: (value) -> (typeof value is 'number') and (value isnt value)
+	'Defined'		: (value) -> value isnt undefined
 
 typesPredicates.StringOrNumber= (value) -> typesPredicates['String'](value) or typesPredicates['Number'](value)
 
@@ -247,7 +248,7 @@ class Strings extends Chars
 		return string.substr offset, _.forceNumber amount, string.length
 
 	@replace: ( string= '', toReplace= '', replacement= '', flags= 'g' ) ->
-		if not ( _.isStringOrNumber(string) and (_.typeof( toReplace ) in [ 'string', 'number', 'regexp' ]) )
+		if not ( _.isStringOrNumber(string) and (_.typeof(toReplace) in [ 'string', 'number', 'regexp' ]) )
 			return _.forceString string
 		if _.notRegExp toReplace
 			toReplace= Strings.regEscape (toReplace+ '')
@@ -395,6 +396,7 @@ class Strings extends Chars
 	constructor: ->
 		@set.apply @, arguments
 		@wrapMethod= null
+		@crop= @slice
 
 	set: -> @string= Strings.create.apply @, arguments; @
 
@@ -497,9 +499,7 @@ Object.defineProperty Strings::, 'wrap',
 		return @wrapMethod @string	if not _.isNull @wrapMethod
 		return @string
 
-
 # aliases:
-Strings::crop= Strings::slice
 Strings.Types= Types
 Strings.Chars= Chars
 Strings.crop= Strings.slice

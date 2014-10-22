@@ -108,6 +108,9 @@
     },
     'NaN': function(value) {
       return (typeof value === 'number') && (value !== value);
+    },
+    'Defined': function(value) {
+      return value !== void 0;
     }
   };
 
@@ -757,6 +760,7 @@
     function Strings() {
       this.set.apply(this, arguments);
       this.wrapMethod = null;
+      this.crop = this.slice;
     }
 
     Strings.prototype.set = function() {
@@ -1007,8 +1011,6 @@
       return this.string;
     }
   });
-
-  Strings.prototype.crop = Strings.prototype.slice;
 
   Strings.Types = Types;
 
