@@ -98,36 +98,6 @@ mapStringToNumber= ( array ) ->
 		array[ index ]= nr
 	return array.length
 
-insertSort= ( array ) ->
-	length= array.length- 1
-	for index in [ 1..length ]
-		current	= array[ index ]
-		prev		= index- 1
-		while (prev >= 0) && (array[ prev ] > current)
-			array[ prev+1 ]= array[ prev ]
-			--prev
-		array[ +prev+1 ]= current
-	return array
-
-	# only for sorted arrays
-noDupAndReverse= ( array ) ->
-	length= array.length- 1
-	newArr= []
-	for index in [length..0]
-		newArr.push array[ index ] if newArr[ newArr.length- 1 ] isnt array[ index ]
-	return newArr
-
-# process arguments list to contain only positive indexes, sorted, reversed order, and duplicates removed
-sortNoDupAndReverse= ( array, maxLength ) ->
-	processed= []
-	for value, index in array
-		value= _.forceNumber value
-		continue if value.void
-		if value <= maxLength
-			value= _.positiveIndex value, maxLength
-		processed.push _.forceNumber value, 0
-	return noDupAndReverse insertSort processed
-
 #															_ (selection of tools.js)
 
 class _ extends Types
@@ -166,6 +136,36 @@ class _ extends Types
 			return index- 1 if index > 0
 			return max+ index
 		return false
+
+	@insertSort: ( array ) ->
+		length= array.length- 1
+		for index in [ 1..length ]
+			current	= array[ index ]
+			prev		= index- 1
+			while (prev >= 0) && (array[ prev ] > current)
+				array[ prev+1 ]= array[ prev ]
+				--prev
+			array[ +prev+1 ]= current
+		return array
+
+	# only for sorted arrays
+	@noDupAndReverse: ( array ) ->
+		length= array.length- 1
+		newArr= []
+		for index in [length..0]
+			newArr.push array[ index ] if newArr[ newArr.length- 1 ] isnt array[ index ]
+		return newArr
+
+	# process arguments list to contain only positive indexes, sorted, reversed order, and duplicates removed
+	@sortNoDupAndReverse: ( array, maxLength ) ->
+		processed= []
+		for value, index in array
+			value= _.forceNumber value
+			continue if value.void
+			if value <= maxLength
+				value= _.positiveIndex value, maxLength
+			processed.push _.forceNumber value, 0
+		return _.noDupAndReverse _.insertSort processed
 
 #																	Chars (selection of chars.js)
 
@@ -237,7 +237,7 @@ class Strings extends Chars
 
 	@sort: ( string ) ->
 		string= _.forceString( string ).trim().split( '' )
-		return insertSort( string ).join ''
+		return _.insertSort( string ).join ''
 
 	@random: ( amount, charSet ) ->
 		amount= _.forceNumber amount, 1
@@ -390,7 +390,7 @@ class Strings extends Chars
 
 	@insert: ( string, insertion, positions... ) ->
 		return string if ('' is string= _.forceString string) or ('' is insertion= _.forceString insertion)
-		positions= sortNoDupAndReverse positions, string.length
+		positions= _.sortNoDupAndReverse positions, string.length
 		posCount= mapStringToNumber( positions )- 1
 		return string if 0 > posCount
 		for index in [0..posCount]

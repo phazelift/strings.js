@@ -640,16 +640,20 @@ _________________
 > Returns an absolute, 0 based index from a 1 based index positive or negative number. If index is negative then
 > it`s relative positive number will be returned. If index is 0 or exceeding limit, false is returned.
 
-
 **Strings.insertSort**
 > `<array> Strings.insertSort( <array> array )`
 
 > A basic insert-sort on array. Return value is just for convenience.
 
+**Strings.noDupAndReverse**
+> `<array> Strings.noDupAndReverse( <array> array )`
+
+> Removes duplicates from, and reverses the array. Only works on sorted arrays, which you can do with insertSort.
+
 _________________
 **From types.js**	( to be found in phazelift repositories )
 
-> The entire library is included in strings.js. Check the repo for general info and API.
+> The entire library (1.8kb) is included in strings.js. Check the repo for general info and API.
 
 
 __________
@@ -657,6 +661,13 @@ __________
 change log
 ==========
 
+**1.1.9**
+
+Made available `Strings.insertSort()` and `Strings.noDupAndReverse()` in the Tools section, I can now remove them from words.js.
+
+Updated readme.
+
+__________________________________
 **1.1.7**
 
 Added:
@@ -664,6 +675,10 @@ Added:
 
 Changed:
 -	Strings.insert now allows for inserting to multiple positions. Invalid or no index given will now return the original string.
+
+Updated:
+-	Readme
+-	Jasmine tests
 
 ___________________________________
 **1.1.4**
