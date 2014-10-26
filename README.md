@@ -2,13 +2,37 @@ strings.js
 ==========
 
 A flexible, robust and powerful Javascript string manipulation library. Contains the usual suspects and loads of
-very handy additions. Written for myself, as I wanted some solid fundaments to build upon. There are more string
-manipulation libs out there, but for many reasons I don't like them.. I expect not to be that unique, so give
-strings.js a try, it's pretty cool and you might prefer it above the others as well!
+very handy additions.
 
 String.prototype is not affected by strings.js
-<br/>
-<br/>
+______________________________________________
+Some quick examples:
+```javascript
+// discover strings:
+var strings= new Strings( 'asagcnaicrbtas' )
+	.reverse().remove('a','b','c').upper(1).append('!');
+console.log( strings.$ );
+// Strings!
+strings.lower('s').remove('!').append( '.js' );
+console.log( strings.$ );
+// strings.js
+
+// 33 character password from all printable ascii:
+console.log( Strings.random(33) );
+// 9&@w=Q+|Gxe`NzL='Q8?4IxAg0dUyq}]s (pseudo)
+
+// or from numbers only:
+console.log( Strings.random(33, Strings.ASCII_RANGE_NUMBERS) );
+// 326579354237121359463402643861378
+
+console.log( Strings.sort('326579354237121359463402643861378') );
+// '011122223333333444455566667778899'
+
+var sparse= '  \t\t max.   1  \t  consecutive   \t \tspace! \t ';
+console.log( Strings.oneSpaceAndTrim(sparse) );
+// max 1 consecutive space!
+```
+
 ___
 <br/>
 Made for browser and/or node.js. You can use `npm install strings.js` if you like.
@@ -18,7 +42,7 @@ ___
 General description:
 --------------------
 
-Because strings.js is build upon types.js it is very robust. Almost any String type argument accepts a Number type and vice versa.
+Because strings.js is build upon types.js it is very robust. Almost any String type argument accepts a Number type and viceversa.
 All input and output is checked for type validity. If you expect a `typeof 'string'`, you won't get `undefined` or
 any other type that can break following code.
 
@@ -36,9 +60,8 @@ types.js is included in strings.js as it is the fundament for strings.js. types.
 can be used as static methods from Strings. Descriptions for all included methods can be found in the API below.
 The types.js API can be found in the phazelift/types.js repo.
 
-I hope to give some better and more detailed examples later when I have time available for that. I am Also still working
-on the API.. For now I recommend to check the Jasmine tests to see what strings.js is capable of, and do some fun
-experiments yourself of course.
+Still working on the API.. For now I recommend to check the Jasmine tests to see what strings.js is capable of, and have some
+fun playing it.
 
 Some examples:
 ------------
@@ -57,30 +80,27 @@ s.prepend('reversed ').reverse();						// !sgnirtS desrever
 s.shuffle();										// getriever!nrss dS (random on every run)
 s.set();											// (.set with no usable argument wipes the string)
 
-// let's get a little more funky:
-s.set('scgbnaicrbtas').prepend('!').upper(-1)
-	.remove('a', 'b', 'c').reverse();				// Strings!
-s.setWrap( '<3 ' ).wrap;							// <3 Strings! (.wrap only returns the wrapped string, this.string is still <3)
-s.applyWrap( 'I ', '!' ).get(88, 3, 4, 99);			// <3 (88 and 99 are out of range and thus ignored)
+s.set('Strings!').setWrap('<3 ').wrap;				// <3 Strings! (.wrap only returns the wrapped string)
+s.applyWrap('I ', '!').get(88, 3, 4, 99);			// <3 (88 and 99 are out of range and thus ignored)
 s.get();											// I <3 Strings! (wrap was applied to this.string)
 
 // some static Methods
 // all comments reflect the value of s
 s= '      spaces        or tabs     in here?        ' ;
-s= Strings.replace( s, 'not in s', 'ignored..' );	//        spaces        or tabs     in here?
-Strings.split( s+ '\t\t  \t sparse?'  );			// [ 'spaces', 'or', 'tabs', 'in', 'here?' ]
-s= Strings.oneSpaceAndTrim( s );                    // spaces or tabs in here?
-s= Strings.remove( s, ' in here?' );                // spaces or tabs
-s= Strings.xs( s, function(char, index){            // SpAcEs oR TaBs
+s= Strings.replace(s, 'not in s', 'ignored..');		//        spaces        or tabs     in here?
+Strings.split(s+ '\t\t  \t ');						// [ 'spaces', 'or', 'tabs', 'in', 'here?' ]
+s= Strings.oneSpaceAndTrim(s);						// spaces or tabs in here?
+s= Strings.remove(s, ' in here?');					// spaces or tabs
+s= Strings.xs(s, function(char, index){				// SpAcEs oR TaBs
     if (index %2 === 0)
         return char.toUpperCase();
     return true;
 });
-Strings.toCamel( 'a,comma,seperated,string', ',' );	// aCommaSeperatedString
-Strings.unCamel( 'aCommaSeperatedString?', '_' );	// a_comma_seperated_string?
-Strings.times('A', 3 );								// AAA
-s= Strings.random( 20 );							// j#4-s,t0]`bRd86!,>=Z (create password/random string)
-s= Strings.random( 10, Strings.ASCII_RANGE_NUMBERS );
+Strings.toCamel('a,comma,seperated,string?', ',');	// aCommaSeperatedString?
+Strings.unCamel('aUnderscoredString', '_');			// a_underscored_string
+Strings.times('A', 3);								// AAA
+s= Strings.random(20);								// j#4-s,t0]`bRd86!,>=Z (create password/random string)
+s= Strings.random(10, Strings.ASCII_RANGE_NUMBERS);
 													// 6206002371	(create random string in specific range)
 // etc...
 
@@ -101,7 +121,7 @@ In this API, the type of a dynamic Strings object is denoted with `<this>`. Ther
 
 this.string represents the actual state of the internal dynamic string.
 
-This API is still a work in progress.
+This API is in development..
 ____
 **Strings** constructor
 > `<this> Strings( <string>/<number> string,  [string1, ..., stringN] )`
@@ -118,6 +138,11 @@ ____
 
 > 	Sets this.string to string arguments, or resets this.string to '' if no argument is given. Arguments that or not of
 > type String or Number will not be set.
+
+**Strings.prototype.sort**
+> `<this> sort()`
+
+> Returns this.string's characters sorted by it's ordinal value.
 
 **Strings.prototype.random**
 > `<this> random( <string>/<number> amount, <array> asciiRange= Chars.ASCII_RANGE_ALL )`
@@ -203,11 +228,14 @@ ____
 > 	Prepend this.string with string(s).
 
 **Strings.prototype.insert**
-> `<this> insert ( <string>/<number> insertion, <string>/<number> position= 1 )`
+> `<this> insert ( <string>/<number> insertion, <string>/<number> pos, [pos, ..., posN] )`
 
-> Insert insertion at position in this.string, the insertion will be inserted before the character at position.
-> If insert is invalid, or index is less than the negative length of the string, insertion will be prepended to the string.
-> If position is greater than the length of the string, insertion will be appended to the string.
+> Insert insertion at pos in this.string, the insertion will be inserted before the character at pos. If insertion is invalid,
+> or index is less than the negative length of the string, insertion will be prepended to the string. If pos is greater than
+> the length of the string, insertion will be appended to the string.
+
+> Multiple positions are allowed, but duplicate positions ignored. Positions are relative to the string before insertion,
+> so, if our string is `'123'` and we insert `'-'` at position 2 and 3, we will get `'1-2-3'`.
 
 **Strings.prototype.trim**
 > `<this> trim()`
@@ -382,6 +410,9 @@ ______________________________________________
 
 > Returns a string containing every position from string given, in the order they were given.
 > Invalid positions are ignored and won't disrupt the process.
+
+**Strings.sort**
+> `<string> Strings.sort( <string>/<number> string )`
 
 **Strings.random**
 > `<string> Strings.random( <string>/<number> amount= 1, <array> asciiRange= Chars.ASCII_RANGE_ALL )`
@@ -609,11 +640,15 @@ _________________
 > Returns an absolute, 0 based index from a 1 based index positive or negative number. If index is negative then
 > it`s relative positive number will be returned. If index is 0 or exceeding limit, false is returned.
 
+
+**Strings.insertSort**
+> `<array> Strings.insertSort( <array> array )`
+
+> A basic insert-sort on array. Return value is just for convenience.
+
 _________________
 **From types.js**	( to be found in phazelift repositories )
-_________________
 
-**types.js**
 > The entire library is included in strings.js. Check the repo for general info and API.
 
 
@@ -622,10 +657,19 @@ __________
 change log
 ==========
 
+**1.1.7**
+
+Added:
+-	`Strings.sort( string )`, `Strings.prototype.sort()`, now you can sort the characters of your string by ordinal value.
+
+Changed:
+-	Strings.insert now allows for inserting to multiple positions. Invalid or no index given will now return the original string.
+
+___________________________________
 **1.1.4**
 
 Updated types.js to version 1.3.4
-
+___________________________________
 **1.1.3**
 
 Added Jasmine tests for the static part of the library. The dynamic part was thorougly tested already, but I hope

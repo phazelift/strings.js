@@ -43,6 +43,33 @@ function testNoOrInvalidStringArguments( method ){
 
 //                                       Strings/Tools
 
+
+describe("sort( string )", function() {
+
+    testNoOrInvalidStringArguments( Strings.sort );
+
+    it("should return string sorted by ordinal value", function(){
+
+        result= Strings.sort( 0 );
+        expect( result ).toBe( '0' );
+
+        result= Strings.sort( 321 );
+        expect( result ).toBe( '123' );
+
+        result= Strings.sort('321');
+        expect( result ).toBe( '123' );
+
+        result= Strings.sort('~!ZZ321');
+        expect( result ).toBe( '!123ZZ~' );
+
+        result= Strings.sort('Strings!');
+        expect( result ).toBe( '!Sginrst' );
+
+    });
+});
+
+
+
 describe("inRange(nr, range)", function() {
 
     it("should return false if no arguments are given", function(){
@@ -1993,18 +2020,18 @@ describe("insert( string, insertion, index )", function() {
         expect( result ).toBe( '123*&^abc' );
     });
 
-     it("should return string with insertion inserted at the beginning of string if no or invalid index is given", function(){
+     it("should string without changes if no or invalid index is given", function(){
         result= Strings.insert( 123, 0 );
-        expect( result ).toBe( '0123' );
+        expect( result ).toBe( '123' );
 
         result= Strings.insert( 123, 0, NaN );
-        expect( result ).toBe( '0123' );
+        expect( result ).toBe( '123' );
 
         result= Strings.insert( 123, 0, false );
-        expect( result ).toBe( '0123' );
+        expect( result ).toBe( '123' );
 
         result= Strings.insert( 123, 0, {} );
-        expect( result ).toBe( '0123' );
+        expect( result ).toBe( '123' );
     });
 
 
@@ -2040,6 +2067,28 @@ describe("insert( string, insertion, index )", function() {
         result= Strings.insert( 123, 0, '-10px' );
         expect( result ).toBe( '0123' );
     });
+
+    it("should return string with insertion on multiple positions", function(){
+        result= Strings.insert( 123, '-', 2, 3 );
+        expect( result ).toBe( '1-2-3' );
+
+        result= Strings.insert( 123, '-', -1, 1 );
+        expect( result ).toBe( '-12-3' );
+
+        result= Strings.insert( 123, '-', 2, -2 );
+        expect( result ).toBe( '1-23' );
+
+        result= Strings.insert( 123, '-', -5, 30 );
+        expect( result ).toBe( '-123-' );
+
+        result= Strings.insert( 123, '-', '-50px', 'hn30' );
+        expect( result ).toBe( '-123' );
+
+        result= Strings.insert( 123, '-', '5pt', '30deg' );
+        expect( result ).toBe( '123--' );
+    });
+
+
 
 });
 

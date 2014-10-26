@@ -17,7 +17,12 @@
 
 "use strict"
 
-#														types.coffee (types.js v1.3.4)
+#														types.coffee (types.js v1.3.6)
+
+emptyNumber= ->
+	number= new Number
+	number.void= true
+	return number
 
 Types=
 	parseIntBase: 10
@@ -25,7 +30,7 @@ Types=
 literals=
 	'Boolean'	: false
 	'String'		: ''
-	'Number'		: 0
+	'Number'		: emptyNumber()
 	'Object'		: {}
 	'Array'		: []
 	'Function'	: ->
@@ -34,12 +39,12 @@ createForce= ( type ) ->
 
 	convertType= ( value ) ->
 		switch type
-			when 'Number' then return value if Types.notNaN value= parseInt value, Types.parseIntBase
+			when 'Number' then return value if Types.isNumber value= parseInt value, Types.parseIntBase
 			when 'String' then return value+ '' if Types.isStringOrNumber value
 			else return value if Types[ 'is'+ type ] value
 		return false
 
-	return ( value, replacement= value ) ->
+	return ( value, replacement ) ->
 		return value if false isnt value= convertType value
 		return replacement if false isnt replacement= convertType replacement
 		return literals[ type ]
@@ -58,11 +63,11 @@ typesPredicates=
 	'Boolean'		: (value) -> typeof value is 'boolean'
 	'String'			: (value) -> typeof value is 'string'
 	'Function'		: (value) -> typeof value is 'function'
-	'Number'			: (value) -> (typeof value is 'number') and (value is value)
+	'Number'			: (value) -> (typeof value is 'number') and (value is value) or ( (typeof value is 'object') and (value instanceof Number) and value.void )
 	'Array'			: (value) -> (typeof value is 'object') and (value instanceof Array)
 	'RegExp'			: (value) -> (typeof value is 'object') and (value instanceof RegExp)
 	'Date'			: (value) -> (typeof value is 'object') and (value instanceof Date)
-	'Object'			: (value) -> (typeof value is 'object') and not (value instanceof Array) and not (value instanceof RegExp) and not (value instanceof Date) and not (value is null)
+	'Object'			: (value) -> (typeof value is 'object') and (value isnt null) and not (value instanceof Array) and not (value instanceof RegExp) and not (value instanceof Date)
 	'NaN'				: (value) -> (typeof value is 'number') and (value isnt value)
 	'Defined'		: (value) -> value isnt undefined
 
@@ -88,9 +93,40 @@ Types.typeof= ( value ) ->
 mapStringToNumber= ( array ) ->
 	return 0 if _.notArray array
 	for value, index in array
-		return index if _.isNaN nr= parseInt array[index], 10
+		nr= _.forceNumber value
+		return index if nr.void
 		array[ index ]= nr
 	return array.length
+
+insertSort= ( array ) ->
+	length= array.length- 1
+	for index in [ 1..length ]
+		current	= array[ index ]
+		prev		= index- 1
+		while (prev >= 0) && (array[ prev ] > current)
+			array[ prev+1 ]= array[ prev ]
+			--prev
+		array[ +prev+1 ]= current
+	return array
+
+	# only for sorted arrays
+noDupAndReverse= ( array ) ->
+	length= array.length- 1
+	newArr= []
+	for index in [length..0]
+		newArr.push array[ index ] if newArr[ newArr.length- 1 ] isnt array[ index ]
+	return newArr
+
+# process arguments list to contain only positive indexes, sorted, reversed order, and duplicates removed
+sortNoDupAndReverse= ( array, maxLength ) ->
+	processed= []
+	for value, index in array
+		value= _.forceNumber value
+		continue if value.void
+		if value <= maxLength
+			value= _.positiveIndex value, maxLength
+		processed.push _.forceNumber value, 0
+	return noDupAndReverse insertSort processed
 
 #															_ (selection of tools.js)
 
@@ -101,7 +137,7 @@ class _ extends Types
 		return (nr >= range[0]) and (nr <= range[1])
 
 	@limitNumber= ( nr, range ) ->
-		nr= _.forceNumber nr
+		nr= _.forceNumber nr, 0
 		return nr if mapStringToNumber( range ) < 2
 		return range[0] if nr < range[0]
 		return range[1] if nr > range[1]
@@ -124,7 +160,7 @@ class _ extends Types
 		return array
 
 	@positiveIndex: ( index, max ) ->
-		return false if 0 is index= _.forceNumber index
+		return false if 0 is index= _.forceNumber index, 0
 		max= Math.abs _.forceNumber max
 		if Math.abs( index ) <= max
 			return index- 1 if index > 0
@@ -143,7 +179,7 @@ class Chars extends _
 	@REGEXP_SPECIAL_CHARS: ['?', '\\', '[', ']', '(', ')', '*', '+', '.', '/', '|', '^', '$', '<', '>', '-', '&']
 
 	@ascii: ( ordinal ) -> String.fromCharCode _.forceNumber ordinal
-	@ordinal: ( char ) -> _.forceNumber _.forceString( char ).charCodeAt()
+	@ordinal: ( char ) -> _.forceNumber _.forceString(char).charCodeAt(), 0
 
 	@isUpper: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_UPPERCASE )
 	@isLower: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_LOWERCASE )
@@ -198,6 +234,10 @@ class Strings extends Chars
 			pos= _.positiveIndex arguments[pos], length
 			result+= string[ pos ] if pos isnt false
 		return result
+
+	@sort: ( string ) ->
+		string= _.forceString( string ).trim().split( '' )
+		return insertSort( string ).join ''
 
 	@random: ( amount, charSet ) ->
 		amount= _.forceNumber amount, 1
@@ -348,14 +388,18 @@ class Strings extends Chars
 
 	@lower: ( string, args...) -> changeCase string, 'toLowerCase', args...
 
-	@insert: ( string, insertion, index= 1 ) ->
-		string	= _.forceString string
-		insertion= _.forceString insertion
-		index		= _.forceNumber index
-		return string+ insertion if index > string.length
-		index		= _.positiveIndex index, string.length
-		index		= 0 if index is false
-		return string.substr( 0, index )+ insertion+ string.substr index
+	@insert: ( string, insertion, positions... ) ->
+		return string if ('' is string= _.forceString string) or ('' is insertion= _.forceString insertion)
+		positions= sortNoDupAndReverse positions, string.length
+		posCount= mapStringToNumber( positions )- 1
+		return string if 0 > posCount
+		for index in [0..posCount]
+			index= positions[ index ]
+			if index > string.length
+				string= ( string+ insertion )
+				continue
+			string= string.substr( 0, index )+ insertion+ string.substr index
+		return string
 
 	@removeRange: ( string, offset, amount ) ->
 		string= _.forceString string
@@ -400,6 +444,8 @@ class Strings extends Chars
 
 	set: -> @string= Strings.create.apply @, arguments; @
 
+	sort: -> @string= Strings.sort @string; @
+
 	random: ( amount, charSet ) -> @string= Strings.random amount, charSet; @
 
 	xs: ( callback ) -> @string= Strings.xs @string, callback; @
@@ -432,7 +478,7 @@ class Strings extends Chars
 
 	pop: ( amount ) -> @string= Strings.pop @string, amount; @
 
-	insert: ( string, position ) -> @string= Strings.insert @string, string, position; @
+	insert: ( string, positions... ) -> @string= Strings.insert @string, string, positions...; @
 
 	trim: ->	@string= Strings.trim( @string ); @
 
@@ -503,6 +549,8 @@ Object.defineProperty Strings::, 'wrap',
 Strings.Types= Types
 Strings.Chars= Chars
 Strings.crop= Strings.slice
+Strings::crop= Strings::slice
+Strings::append= Strings::push
 
 if window? then window.Strings= Strings
 else module.exports= Strings
