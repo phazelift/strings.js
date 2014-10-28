@@ -1088,8 +1088,6 @@
 
   Strings.prototype.append = Strings.prototype.push;
 
-  console.log(new Strings('!@ #$').isSpecial());
-
   if (typeof window !== "undefined" && window !== null) {
     window.Strings = Strings;
   } else {

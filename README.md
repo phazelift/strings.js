@@ -746,36 +746,21 @@ ______________________________________________
 
 
 ___________________
-Inherited functions
--------------------
+###Tools and imports from my other libraries:
 
-_________________
-**From chars.js**		( to be found in the phazelift repositories )
-_________________
 
-**Strings.ASCII_RANGE_UPPERCASE**
-> `<array> Strings.ASCII_RANGE_UPPERCASE`
+**Strings.ASCII_RANGE_...**
 
-> An array with two indexes: [0] is the bottom of range, [1] is the top of range of the ordinal
-> value of uppercase ascii characters.
-
-**Strings.ASCII_RANGE_LOWERCASE**
-> `<array> Strings.ASCII_RANGE_LOWERCASE`
-
-> An array with two indexes: [0] is the bottom of range, [1] is the top of range of the ordinal
-> value of lowercase ascii characters.
-
-**Strings.ASCII_RANGE_NUMBERS**
-> `<array> Strings.ASCII_RANGE_NUMBERS`
-
-> An array with two indexes: [0] is the bottom of range, [1] is the top of range of the ordinal
-> value of ascii number characters.
-
-**Strings.ASCII_RANGE_ALL**
-> `<array> Strings.ASCII_RANGE_ALL`
-
-> An array with two indexes: [0] is the bottom of range, [1] is the top of range of the ordinal
-> value of all 'printable' ascii characters.
+|Range										|Ordinal range	|Characters found in range
+|:----------------------------------|--------------|:-----------------------------
+|Strings.ASCII_RANGE_UPPERCASE		|[65,90]			|`ABCDEFGHIJKLMNOPQRSTUVWXYZ`
+|Strings.ASCII_RANGE_LOWERCASE		|[97,122]		|`abcdefghijklmnopqrstuvwxyz`
+|Strings.ASCII_RANGE_NUMBERS			|[48,57]			|`0123456789`
+|Strings.ASCII_RANGE_SPECIAL_1		|[32,47]			|` !"#$%&'()*+,-./`
+|Strings.ASCII_RANGE_SPECIAL_2		|[58,64]			|`:;<=>?@`
+|Strings.ASCII_RANGE_SPECIAL_3		|[91,96]			|`[\]^_`\`
+|Strings.ASCII_RANGE_SPECIAL_4		|[123,126]		|`{|}~`
+|Strings.ASCII_RANGE_ALL(printable)	|[32,126]		|` !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`\``abcdefghijklmnopqrstuvwxyz{|}~`
 
 **Strings.REGEXP_SPECIAL_CHARS**
 > `<array> Strings.REGEXP_SPECIAL_CHARS`
@@ -792,24 +777,10 @@ _________________
 
 > Returns the ordinal value of an Ascii character.
 
-**Strings.isUpper**
-> `Strings.isUpper( <string> char )`
-
-> Returns true if char is uppercase.
-
-**Strings.isLower**
-> `Strings.isLower( <string> char )`
-
-> Returns true if char is lowercase.
-
 **Strings.random**
 >`Strings.random( asciiRange= Strings.ASCII_RANGE_ALL )`
 
 > Returns a random character within the given asciiRange. See format above.
-
-_________________
-**From tools.js**	( to be found in the phazelift repositories now or soon )
-_________________
 
 
 **Strings.inRange**
@@ -849,9 +820,9 @@ _________________
 > Removes duplicates from, and reverses the array. Only works on sorted arrays, which you can do with insertSort.
 
 _________________
-**From types.js**	( to be found in phazelift repositories )
+##types.js
 
-> The entire library (1.8kb) is included in strings.js. Check the repo for general info and API.
+> The full library (1.8kb) is included in strings.js. Check my phazelift repository for general info and API.
 
 
 __________

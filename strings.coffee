@@ -562,8 +562,5 @@ Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
 
-# string= new Strings( 'sort', 'charcters', 'and', 5, 2, 9, 1 )
-console.log( new Strings('!@ #$').isSpecial() )
-
 if window? then window.Strings= Strings
 else module.exports= Strings
