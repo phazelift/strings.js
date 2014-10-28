@@ -174,20 +174,16 @@ class Chars extends _
 	@ASCII_RANGE_UPPERCASE	: [65, 90]
 	@ASCII_RANGE_LOWERCASE	: [97, 122]
 	@ASCII_RANGE_NUMBERS		: [48, 57]
+	@ASCII_RANGE_SPECIAL_1	: [32, 47]
+	@ASCII_RANGE_SPECIAL_2	: [58, 64]
+	@ASCII_RANGE_SPECIAL_3	: [91, 96]
+	@ASCII_RANGE_SPECIAL_4	: [123, 126]
 	@ASCII_RANGE_ALL			: [32, 126]
 
 	@REGEXP_SPECIAL_CHARS: ['?', '\\', '[', ']', '(', ')', '*', '+', '.', '/', '|', '^', '$', '<', '>', '-', '&']
 
 	@ascii: ( ordinal ) -> String.fromCharCode _.forceNumber ordinal
 	@ordinal: ( char ) -> _.forceNumber _.forceString(char).charCodeAt(), 0
-
-	@isUpper: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_UPPERCASE )
-	@isLower: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_LOWERCASE )
-
-	@isAlpha		: ( char ) -> Chars.isUpper(char) or Chars.isLower(char)
-	@isNumeric	: ( char ) -> _.inRange Chars.ordinal(char), Chars.ASCII_RANGE_NUMBERS
-	@isSpecial	: ( char ) -> _.inRange( Chars.ordinal(char), Chars.ASCII_RANGE_ALL ) and not ( Chars.isAlphaNumeric(char) or (char is ' ') )
-	@isAlphaNumeric: ( char ) -> Chars.isAlpha(char) or Chars.isNumeric(char)
 
 	@random: ( range ) ->
 		range= _.forceArray range, Chars.ASCII_RANGE_ALL
@@ -262,10 +258,21 @@ class Strings extends Chars
 		return false if _.notString(string) or (string.length > 0)
 		return true
 
-	@isAlpha: ( string ) -> asciiStringType string, Chars.isAlpha
-	@isNumeric: ( string ) -> asciiStringType string, Chars.isNumeric
-	@isAlphaNumeric: ( string ) -> asciiStringType string, Chars.isAlphaNumeric
-	@isSpecial: ( string ) -> asciiStringType string, Chars.isSpecial
+	@isAlpha: ( string ) ->
+		return false if '' is string= _.forceString string
+		/^[a-z]*$/ig.test string
+
+	@isNumeric: ( string ) ->
+		return false if '' is string= _.forceString string
+		/^[0-9]*$/g.test string
+
+	@isAlphaNumeric: ( string ) ->
+		return false if '' is string= _.forceString string
+		/^[0-9|a-z]*$/ig.test string
+
+	@isSpecial: ( string ) ->
+		return false if '' is string= _.forceString string
+		/^[^0-9|a-z]*$/ig.test string
 
 	@isSpace: ( string ) -> /^[ \t]+$/g.test string
 
@@ -420,7 +427,10 @@ class Strings extends Chars
 		string= Strings.replace( string, remove ) for remove in toRemove
 		return string
 
-	@startsWith: ( string, start ) -> Strings.find( string, start )[0] is 1
+	@startsWith: ( string, start ) ->
+		return false if ('' is string= _.forceString string) or ('' is start= _.forceString start)
+		start= new RegExp '^'+ Strings.regEscape start
+		start.test string
 
 	@endsWith: ( string, ending ) ->
 		return false if ('' is string= _.forceString string) or ('' is ending= _.forceString ending)
@@ -551,6 +561,9 @@ Strings.Chars= Chars
 Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
+
+# string= new Strings( 'sort', 'charcters', 'and', 5, 2, 9, 1 )
+console.log( new Strings('!@ #$').isSpecial() )
 
 if window? then window.Strings= Strings
 else module.exports= Strings

@@ -31,6 +31,8 @@ console.log( Strings.sort('326579354237121359463402643861378') );
 var sparse= '  \t\t max.   1  \t  consecutive   \t \tspace! \t ';
 console.log( Strings.oneSpaceAndTrim(sparse) );
 // max 1 consecutive space!
+
+// there is much more! see below..
 ```
 
 ___
@@ -126,29 +128,52 @@ ____
 **Strings** constructor
 > `<this> Strings( <string>/<number> string,  [string1, ..., stringN] )`
 
-> Calls .set internally, so .set rules apply.
+> Calls .set internally, so .set rules apply, see below.
+```javascript
+var string= new Strings( 'All those characters..' );
+```
 
 **Strings.prototype.string**
 > `<string> string`
 
-> Internal/contextual string, do not set direct, use someString.set() instead.
+> Internal/contextual string, do not set directly, use .set() instead to prevent bugs. You can of course use
+> .string as a getter to fetch the string.
+```javascript
+	var myString= new Strings('The actual string');
+	console.log( myString.string );
+	// The actual string
+```
 
 **Strings.prototype.set**
 > `<this> set( <string>/<number> string,  [string1, ..., stringN] )`
 
-> 	Sets this.string to string arguments, or resets this.string to '' if no argument is given. Arguments that or not of
+> 	Sets this.string to string arguments, or resets this.string to '' if no argument is given. Arguments that are not of
 > type String or Number will not be set.
-
+```javascript
+var string= new Strings();
+string.set('James ', 'Bond ', 'is ', 0, 0, 7);
+// James Bond is 007
+```
 **Strings.prototype.sort**
 > `<this> sort()`
 
 > Returns this.string's characters sorted by it's ordinal value.
+```javascript
+var string= new Strings( 'sort', 'charcters', 'and', 5, 2, 9, 1 );
+console.log( string.sort().$ );
+// 1259aaccdehnorrrsstt
+```
 
 **Strings.prototype.random**
 > `<this> random( <string>/<number> amount, <array> asciiRange= Chars.ASCII_RANGE_ALL )`
 
 > Applies a random string with amount characters within asciiRange. asciiRange is an Array with two indices; [min, max].
 > If you want a custom range, you can better use: new Strings('mysecret007shuffle').shuffle()
+```javascript
+// 10 random special characters
+console.log( new Strings().random(10, Strings.ASCII_RANGE_SPECIAL_1) );
+// &!! %.,./*
+```
 
 **Strings.prototype.xs**
 > `<string> xs( <function> callback(char, index){} )`
@@ -157,17 +182,36 @@ ____
 
 > If the callback returns true, char is applied. If the callback returns false or undefined, char will be skipped.
 > Any character, String or Number returned by callback will be applied to index in string.
+```javascript
+var string= new Strings('It is easy to change characters in any way!');
+string.xs( function(ch){
+	return (ch === ' ')
+		? ' * '
+		: true;
+});
+console.log( string.$ );
+// It * is * easy * to * change * characters * in * any * way!
+```
 
 **Strings.prototype.times**
 > `<this> times( <string>/<number> amount )`
 
 > Duplicates this.string by amount, or leaves this.string unchanged if no amount is given.
+```javascript
+console.log( new Strings('<3 ').times(3).$ );
+// <3 <3 <3
+```
 
 **Strings.prototype.get**
 > `<string> get( <string>/<number> indexes, [index1, ..., [indexN] )`
 
 > Returns one or more indexes in a new string, without affecting this.string.
 > Without arguments get() returns the full this.string.
+```javascript
+var string= new Strings('sdblaem');
+console.log( string.get(5, 1, 1, -2, -1, 3, 4, -2, 2) );
+// assembled
+```
 
 **Strings.prototype.$**
 > `<string> $` (getter)
@@ -180,52 +224,97 @@ ____
 > Returns a substring of this.string from offset to offset+amount.
 > If amount is not given, all characters from offset to end of this.string are returned.
 > If no arguments are given, a full copy of this.string is returned.
+```javascript
+var string= new Strings('copy a part');
+console.log( string.copy(-4, 4) );
+// part
+```
 
 **Strings.prototype.empty**
 > `<boolean> empty()`
 
 > Returns true if this.string.length is < 1.
+```javascript
+console.log( new Strings().empty() );
+// true
+```
 
 **Strings.isAlpha**
 > `<boolean> isAlpha()`
 
 > Returns true if this.string is in the range ['a'..'z'] and/or ['A'..'Z']
+```javascript
+console.log( new Strings('abcIsAlpha').isAlpha() );
+// true
+```
 
 **Strings.isNumeric**
 > `<boolean> isNumeric()`
 
 > Returns true if this.string is in the range ['0'..'9']
+```javascript
+console.log( new Strings('123').isNumeric() );
+// true
+```
 
 **Strings.isAlphaNumeric**
 > `<boolean> isAlphaNumeric()`
 
 > Returns true if this.string is in the range ['a'..'z'] and/or ['A'..'Z'] and/or ['0'..'9']
+```javascript
+console.log( new Strings('abc123').isAlphaNumeric() );
+// true
+```
 
 **Strings.isSpecial**
 > `<boolean> isSpecial()`
 
-> Returns true if this.string is *NOT* in the range ['a'..'z'] and/or ['A'..'Z'] and/or ['0'..'9']
+> Returns true if this.string is *NOT* in the range ['a'..'z'] and/or ['A'..'Z'] and/or ['0'..'9'], but *in* the
+> range of all printable ascii characters.
+```javascript
+console.log( new Strings('!@ #$').isSpecial() );
+// true
+// note that space is a special character!
+```
 
 **Strings.prototype.isSpace**
 > `<boolean> isSpace()`
 
 > Returns true if this.string contains no characters other than spaces and/or horizontal tabs.
+```javascript
+console.log( new Strings(' \t ').isSpace() );
+// true
+```
 
 **Strings.prototype.push**
 > `<this> push ( <string>/<number> string, [string1, ..., stringN] )`
 
 > Append string(s) to this.string.
+```javascript
+var string= new Strings('add to this ').push('string', '?');
+console.log( string.$ );
+// add to this string?
+```
 
 **Strings.prototype.pop**
 > `<this> pop ( <string>/<number> amount )`
 
 > 	Removes amount characters starting from the end of this.string going backwards, no arguments pops only one
 > character.
+```javascript
+var string= new Strings('remove characters from the end').pop(13);
+console.log( string.$ );
+// remove characters
+```
 
 **Strings.prototype.prepend**
 > `<this> prepend ( <string>/<number> string, [string1, ..., stringN] )`
 
 > 	Prepend this.string with string(s).
+```javascript
+var string= new Strings('to prepend').prepend(1, '. some', ' strings ');
+console.log( string.$ );
+// 1. some strings to prepend
 
 **Strings.prototype.insert**
 > `<this> insert ( <string>/<number> insertion, <string>/<number> pos, [pos, ..., posN] )`
@@ -236,12 +325,21 @@ ____
 
 > Multiple positions are allowed, but duplicate positions ignored. Positions are relative to the string before insertion,
 > so, if our string is `'123'` and we insert `'-'` at position 2 and 3, we will get `'1-2-3'`.
+```javascript
+var string= new Strings('wherearethespaces?').insert(' ', 6, 9, 12 );
+console.log( string.$ );
+// where are the spaces?
 
 **Strings.prototype.trim**
 > `<this> trim()`
 
 > Removes white space characters, including spaces, tabs, form feeds, line feeds and other Unicode spaces, from the
 > beginning and the end of the string.
+```javascript
+var string= new Strings('   \t remove leading and trailing tabs and spaces    \t').trim();
+console.log( string.$ );
+// remove leading and trailing tabs and spaces
+```
 
 **Strings.prototype.trimLeft**
 > `<this> trimLeft()`
@@ -258,12 +356,20 @@ ____
 **Strings.prototype.oneSpace**
 > `<this> oneSpace()`
 
-> 	Reduces all horizontal tabs and/or spaces found in this.string to a maximum of one.
+> 	Reduces all consecutive horizontal tabs and/or spaces found in this.string to a maximum of one.
+```javascript
+var string= new Strings('sparse   	 	 strings   \t  cleaned  up!').oneSpace();
+console.log( string.$ );
+// sparse strings cleaned up!
 
 **Strings.prototype.oneSpaceAndTrim**
 > `<this> oneSpaceAndTrim()`
 
 >	Applies this.trim() and this.oneSpace() on this.string.
+```javascript
+var string= new Strings('  \t  sparse    strings   \t  cleaned  up!  \t ').oneSpaceAndTrim();
+console.log( string.$ );
+// sparse strings cleaned up!
 
 **Strings.prototype.find**
 > `<array> find( <string>/<number> substring, <string> flags )`
@@ -271,27 +377,49 @@ ____
 > Returns an array containing all indexes where substring is found, or an empty array if there is no match.
 > If flags is set to an empty string, only the first occurance of the found substring will be pushed into the array.
 > find internally uses RegExp, so flags is 100% compatible with RegExp flags.
+```javascript
+console.log( new Strings('find character positions').find(' ') );
+// [ 5, 15 ]
+```
 
 **Strings.prototype.count**
 > `<number> count( <string>/<number> substring )`
 
 > Returns the amount of times substring is found in this.string.
+```javascript
+console.log( new Strings('now count the spaces in this string').count(' ') );
+// 6
+console.log( new Strings('count substrings in this string').count('string') );
+// 2
+```
 
 **Strings.prototype.contains**
 > `<boolean> contains( <string>/<number> string )`
 
 > Returns true if string is a substring of this.string, false if not.
+```javascript
+console.log( new Strings('any spaces in here?').contains('spaces') );
+// true
+```
 
 **Strings.prototype.between**
 > `<string> between( <string>/<number> before, <string>/<number> after )`
 
 > Returns the string between before and after. The first occurance of before and the last occurance of
 > after are matched. An empty string is returned in case of no match.
+```javascript
+console.log( new Strings('what is (between) the braces?').between('(', ')') );
+// between
+```
 
 **Strings.prototype.slice**
 > `<this> slice( <string>/<number> offset, <string>/<number> amount )`
 
 > Crop this.string from offset with amount.
+```javascript
+console.log( new Strings('fetch a slice of this').slice(9, 5).$ );
+// slice
+```
 
 **Strings.prototype.crop**
 > An alias for slice.
@@ -300,32 +428,61 @@ ____
 > `<this> truncate( <string>/<number> offset, <string>/<number> suffix )`
 
 > Removes all characters after offset from this.string, and optionally add a suffix.
+```javascript
+var string= new Strings('is truncate pop with a suffix?')
+	.truncate(15, '? No, it counts from the start, and you can add a suffix.');
+console.log( string.$ );
+// is truncate pop? No, it counts from the start and you can add a suffix.
+```
 
 **Strings.prototype.remove**
 > `<this> remove( <string>/<number> string,  [string1, ..., stringN] )`
 
 > - Arguments are substrings - Remove all found/matching strings given as arguments from this.string.
+```javascript
+var string= new Strings('what is the lifetime of a string?');
+console.log( string.remove( 'what', 'is ', '?').$ );
+// the lifetime of a string
+```
 
 **Strings.prototype.removeRange**
 > `<this> removeRange( <string>/<number> index, <string>/<number> amount= 1 )`
 
 > Removes amount character(s) from this.string, starting from index.
+```javascript
+var string= new Strings('what is the lifetime of a string?');
+console.log( string.removeRange(8, 16).$ );
+// what is a string?
+```
 
 **Strings.prototype.removePos**
 > `<this> removePos( <string>/<number> positions, [pos1, ..., posN] )`
 
 > - Arguments are indices - Remove all (one character) positions given as arguments, from this.string.
+```javascript
+var string= new Strings('remove single characters from this string?');
+console.log( string.removePos(-1, 1, 2) );
+// move single characters from this string
+```
 
 **Strings.prototype.replace**
 > `<this> replace( <string>/<number>/<regexp> subString, <string>/<number> replacement, <string> flags )`
 
 > 	Replace the first or every occurence of subString in this.string with replacement depending on flags.
 >	As Strings.replace internally uses RegExp you can set flags to your liking. flags defaults to 'g' (global)
+```javascript
+console.log( new Strings('almost standard..').replace('almost', 'not so').$ );
+// not so standard
+```
 
 **Strings.prototype.reverse**
 > `<this> reverse()`
 
 > 	Reverses this.string.
+```javascript
+console.log( new Strings('desrever').reverse().$ );
+// reversed
+```
 
 **Strings.prototype.upper**
 > `<this> upper( <string>/<number> arg,  [arg1, ..., argN] )`
@@ -333,39 +490,63 @@ ____
 > 	If arg(s) are number(s), the character(s) in this.string at index or indexes are changed to uppercase.
 > 	If arg(s) are character, all matching characters in this.string are changed to uppercase.
 > 	Multiple character strings are matched as well.
+```javascript
+console.log( new Strings('change case').upper('c').$ );
+// Change Case
+console.log( new Strings('change case').upper(1, 3, 5, -2, -4).$ );
+// ChAnGe CaSe
+```
 
 **Strings.prototype.lower**
 > `<this> lower( <string>/<number> arg,  [arg1, ..., argN] )`
 
-> 	If arg(s) are number(s), the character(s) in this.string at index or indexes are changed to lowercase.
-> 	If arg(s) are character, all matching characters in this.string are changed to lowercase.
-> 	Multiple character strings are matched as well.
+> Same as .upper, it only changes uppercase characters to lowercase.
 
 **Strings.prototype.shuffle**
 > `<this> shuffle()`
 
-> 	Randomizes the position of each character in this.string.
+> 	Randomizes(pseudo) the position of each character in this.string.
+```javascript
+console.log( new Strings('shuffle').shuffle().$ );
+// fsfluhe (pseudo random)
+```
 
 **Strings.prototype.toCamel**
 > `<this> toCamel( <string> char= '-' )`
 
 > 	Converts every following character matching char in this.string to uppercase, and removes char.
+```javascript
+console.log( new Strings('underscores_to_camels').toCamel('_').$ );
+underscoresToCamels
+```
 
 **Strings.prototype.unCamel**
 > `<this> unCamel( <string>/<number> insertion= '-' )`
 
 > Converts this.string camels to lower-case with insertion prepended. Insertion defaults to dashes, but can be set
 > to any character of your liking.
+```javascript
+console.log( new Strings('underscoresFromCamels').unCamel('_').$ );
+underscores_from_camels
+```
 
 **Strings.prototype.startsWith**
 > `<boolean> startsWith( <string>/<number> start )`
 
 > Returns true if this.string starts with start, false if not.
+```javascript
+console.log( new Strings('abc 123').startsWith('ab') );
+// true
+```
 
 **Strings.prototype.endsWith**
 > `<boolean> endsWith( <string>/<number> ending )`
 
 > Returns true if this.string ends with ending, false if not.
+```javascript
+console.log( new Strings('abc 123').endsWith('23') );
+// true
+```
 
 **Strings.prototype.setWrap**
 > `<this> setWrap( <string>/<number> prepend, <string>/<number> append )`
@@ -374,6 +555,18 @@ ____
 > Output of .get() or .$ is not affected by setWrap. Fetch .wrap to return the wrapped this.string
 
 > You can add to prepend and append (outwards) by calling .setWrap again.
+```javascript
+var string= new Strings('<3').setWrap( 'she ', ' me');
+console.log( string.$ );
+// <3
+console.log( string.wrap );
+// she <3 me
+string.setWrap('would ', ' forever?');
+console.log( string.wrap );
+// would she <3 me forever?
+console.log( string.$+ '..' );
+// <3..
+```
 
 **Strings.prototype.removeWrap**
 > `<this> removeWrap()`
@@ -385,6 +578,11 @@ ____
 
 > Calls setWrap and wraps the wrapper with prepend and append if set already. Then the total wrap is applied
 > to this.string. Finally the wrapper method will be reset with removeWrap.
+```javascript
+var string= new Strings('<3').applyWrap( 'She ', '\'s me!');
+console.log( string.$ );
+// She <3's me!
+```
 
 **Strings.prototype.wrap**
 > `<string> wrap` (getter)
@@ -661,6 +859,21 @@ __________
 change log
 ==========
 
+**1.2.0**
+
+Started improving the running-speed of all methods. It's a work in progress.
+
+Removed due to optimization:
+-	Chars.isUpper, Chars.isLower, Chars.isAlpha, Chars.isNumeric, Chars.isSpecial, Chars.isAlphaNumeric
+
+Optimized (some stage..):
+-	Strings.isUpper, Strings.isLower, Strings.isAlpha, Strings.isNumeric, Strings.isSpecial,
+	Strings.isAlphaNumeric, Strings.startsWith
+
+Added elementary running-speed results, to be found in tests.
+
+Updated Jasmine tests and readme.
+__________________________________
 **1.1.9**
 
 Made available `Strings.insertSort()` and `Strings.noDupAndReverse()` in the Tools section, I can now remove them from words.js.

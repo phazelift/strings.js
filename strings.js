@@ -304,6 +304,14 @@
 
     Chars.ASCII_RANGE_NUMBERS = [48, 57];
 
+    Chars.ASCII_RANGE_SPECIAL_1 = [32, 47];
+
+    Chars.ASCII_RANGE_SPECIAL_2 = [58, 64];
+
+    Chars.ASCII_RANGE_SPECIAL_3 = [91, 96];
+
+    Chars.ASCII_RANGE_SPECIAL_4 = [123, 126];
+
     Chars.ASCII_RANGE_ALL = [32, 126];
 
     Chars.REGEXP_SPECIAL_CHARS = ['?', '\\', '[', ']', '(', ')', '*', '+', '.', '/', '|', '^', '$', '<', '>', '-', '&'];
@@ -314,30 +322,6 @@
 
     Chars.ordinal = function(char) {
       return _.forceNumber(_.forceString(char).charCodeAt(), 0);
-    };
-
-    Chars.isUpper = function(char) {
-      return _.inRange(Chars.ordinal(char), Chars.ASCII_RANGE_UPPERCASE);
-    };
-
-    Chars.isLower = function(char) {
-      return _.inRange(Chars.ordinal(char), Chars.ASCII_RANGE_LOWERCASE);
-    };
-
-    Chars.isAlpha = function(char) {
-      return Chars.isUpper(char) || Chars.isLower(char);
-    };
-
-    Chars.isNumeric = function(char) {
-      return _.inRange(Chars.ordinal(char), Chars.ASCII_RANGE_NUMBERS);
-    };
-
-    Chars.isSpecial = function(char) {
-      return _.inRange(Chars.ordinal(char), Chars.ASCII_RANGE_ALL) && !(Chars.isAlphaNumeric(char) || (char === ' '));
-    };
-
-    Chars.isAlphaNumeric = function(char) {
-      return Chars.isAlpha(char) || Chars.isNumeric(char);
     };
 
     Chars.random = function(range) {
@@ -477,19 +461,31 @@
     };
 
     Strings.isAlpha = function(string) {
-      return asciiStringType(string, Chars.isAlpha);
+      if ('' === (string = _.forceString(string))) {
+        return false;
+      }
+      return /^[a-z]*$/ig.test(string);
     };
 
     Strings.isNumeric = function(string) {
-      return asciiStringType(string, Chars.isNumeric);
+      if ('' === (string = _.forceString(string))) {
+        return false;
+      }
+      return /^[0-9]*$/g.test(string);
     };
 
     Strings.isAlphaNumeric = function(string) {
-      return asciiStringType(string, Chars.isAlphaNumeric);
+      if ('' === (string = _.forceString(string))) {
+        return false;
+      }
+      return /^[0-9|a-z]*$/ig.test(string);
     };
 
     Strings.isSpecial = function(string) {
-      return asciiStringType(string, Chars.isSpecial);
+      if ('' === (string = _.forceString(string))) {
+        return false;
+      }
+      return /^[^0-9|a-z]*$/ig.test(string);
     };
 
     Strings.isSpace = function(string) {
@@ -781,7 +777,11 @@
     };
 
     Strings.startsWith = function(string, start) {
-      return Strings.find(string, start)[0] === 1;
+      if (('' === (string = _.forceString(string))) || ('' === (start = _.forceString(start)))) {
+        return false;
+      }
+      start = new RegExp('^' + Strings.regEscape(start));
+      return start.test(string);
     };
 
     Strings.endsWith = function(string, ending) {
@@ -1087,6 +1087,8 @@
   Strings.prototype.crop = Strings.prototype.slice;
 
   Strings.prototype.append = Strings.prototype.push;
+
+  console.log(new Strings('!@ #$').isSpecial());
 
   if (typeof window !== "undefined" && window !== null) {
     window.Strings = Strings;
