@@ -1,6 +1,6 @@
 {
   "name": "strings.js",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A flexible, robust and powerful Javascript string manipulation library.",
   "main": "strings.min.js",
   "scripts": {

@@ -830,6 +830,10 @@ __________
 change log
 ==========
 
+**1.2.2**
+
+Updated the included types.js to (the current) version 1.4.2
+
 **1.2.0**
 
 Started improving the running-speed of all methods. It's a work in progress.

@@ -17,74 +17,79 @@
 
 "use strict"
 
-#														types.coffee (types.js v1.3.6)
+#														types.coffee (types.js v1.4.2)
 
-emptyNumber= ->
-	number= new Number
-	number.void= true
-	return number
+instanceOf	= ( type, value ) -> value instanceof type
+# type defaults to object, for internal can do, saves for a few bytes..
+typeOf		= ( value, type= 'object' ) -> typeof value is type
 
-Types=
-	parseIntBase: 10
-
-literals=
+LITERALS=
 	'Boolean'	: false
 	'String'		: ''
-	'Number'		: emptyNumber()
 	'Object'		: {}
 	'Array'		: []
 	'Function'	: ->
+	'Number'		: do ->
+		number= new Number
+		number.void= true
+		return number
+
+TYPES=
+	'Undefined'		: ( value ) -> value is undefined
+	'Null'			: ( value ) -> value is null
+	'Function'		: ( value ) -> typeOf value, 'function'
+	'Boolean'		: ( value ) -> typeOf value, 'boolean'
+	'String'			: ( value ) -> typeOf value, 'string'
+	'Array'			: ( value ) -> typeOf(value) and instanceOf Array, value
+	'RegExp'			: ( value ) -> typeOf(value) and instanceOf RegExp, value
+	'Date'			: ( value ) -> typeOf(value) and instanceOf Date, value
+	'Number'			: ( value ) -> typeOf(value, 'number') and (value is value) or ( typeOf(value) and instanceOf(Number, value) )
+	'Object'			: ( value ) -> typeOf(value) and (value isnt null) and not instanceOf(Boolean, value) and not instanceOf(Number, value) and not instanceOf(Array, value) and not instanceOf(RegExp, value) and not instanceOf(Date, value)
+	'NaN'				: ( value ) -> typeOf(value, 'number') and (value isnt value)
+	'Defined'		: ( value ) -> value isnt undefined
+
+TYPES.StringOrNumber= (value) -> TYPES.String(value) or TYPES.Number(value)
+
+Types= _=
+	# used by forceNumber to set the Radix, defaults to decimals
+	parseIntBase: 10
 
 createForce= ( type ) ->
-
+	# convert value in case initial type test failed. failed conversion returns false
 	convertType= ( value ) ->
 		switch type
-			when 'Number' then return value if Types.isNumber value= parseInt value, Types.parseIntBase
-			when 'String' then return value+ '' if Types.isStringOrNumber value
+			when 'Number' then return value if (_.isNumber value= parseInt value, _.parseIntBase) and not value.void
+			when 'String' then return value+ '' if _.isStringOrNumber value
 			else return value if Types[ 'is'+ type ] value
-		return false
 
+	# the forctType method, returns the type's defaultValue, if both value and replacement are not of, or convertible to, type
 	return ( value, replacement ) ->
-		return value if false isnt value= convertType value
-		return replacement if false isnt replacement= convertType replacement
-		return literals[ type ]
+		return value if value? and undefined isnt value= convertType value
+		return replacement if replacement? and undefined isnt replacement= convertType replacement
+		return LITERALS[ type ]
 
+# test multiple values(arguments) for a given predicate. returns breakState if predicate is breakState for some value
+# when no break occured, ! breakState will be returned.
 testValues= ( predicate, breakState, values= [] ) ->
-	if values.length < 1
-		return true if predicate is typesPredicates.Undefined
-		return false
+	# testing 'has' or 'all' for 'undefined' should return true on calls without arguments
+	return ( predicate is TYPES.Undefined ) if values.length < 1
 	for value in values
-		return breakState if (predicate value) is breakState
+		return breakState if predicate(value) is breakState
 	return not breakState
 
-typesPredicates=
-	'Undefined'		: (value) -> value is undefined
-	'Null'			: (value) -> value is null
-	'Boolean'		: (value) -> typeof value is 'boolean'
-	'String'			: (value) -> typeof value is 'string'
-	'Function'		: (value) -> typeof value is 'function'
-	'Number'			: (value) -> (typeof value is 'number') and (value is value) or ( (typeof value is 'object') and (value instanceof Number) and value.void )
-	'Array'			: (value) -> (typeof value is 'object') and (value instanceof Array)
-	'RegExp'			: (value) -> (typeof value is 'object') and (value instanceof RegExp)
-	'Date'			: (value) -> (typeof value is 'object') and (value instanceof Date)
-	'Object'			: (value) -> (typeof value is 'object') and (value isnt null) and not (value instanceof Array) and not (value instanceof RegExp) and not (value instanceof Date)
-	'NaN'				: (value) -> (typeof value is 'number') and (value isnt value)
-	'Defined'		: (value) -> value isnt undefined
-
-typesPredicates.StringOrNumber= (value) -> typesPredicates['String'](value) or typesPredicates['Number'](value)
-
+# generate all the is/not/has/all/force'Types'
 breakIfEqual= true
-do -> for name, predicate of typesPredicates then do ( name, predicate ) ->
+do -> for name, predicate of TYPES then do ( name, predicate ) ->
 	Types[ 'is'+ name ]	= predicate
 	Types[ 'not'+ name ]	= ( value ) -> not predicate value
 	Types[ 'has'+ name ]	= -> testValues predicate, breakIfEqual, arguments
 	Types[ 'all'+ name ]	= -> testValues predicate, not breakIfEqual, arguments
-	Types[ 'force'+ name ]= createForce name if name of literals
+	# create only forceType of types found in LITERALS
+	Types[ 'force'+ name ]= createForce name if name of LITERALS
 
 Types.typeof= ( value ) ->
-	for type, predicate of typesPredicates
-		return type.toLowerCase() if predicate(value) is true
-	return 'unknown'
+	for name, predicate of TYPES
+		return name.toLowerCase() if predicate(value) is true
 
 #															end of types.coffee
 
@@ -437,6 +442,17 @@ class Strings extends Chars
 		ending= new RegExp Strings.regEscape( ending )+ '$'
 		return ending.test string
 
+	# @formatNumber: ( number, interval= 3 ) ->
+	# 	return number if '' is number= _.forceString number
+	# 	formatted= ''
+	# 	length= number.length- 1
+	# 	interval= _.forceNumber interval, 3
+	# 	for index in [0..length]
+	# 		formatted+= number[ index ]
+	# 		if ( (length- index)% interval is 0 ) and ( index < length )
+	# 			formatted+= '.'
+	# 	return formatted
+
 # test below this line:
 	@wrap: ( prepend= '', append= '' ) ->
 		wrapper= ( string ) -> Strings.create prepend, string, append
@@ -535,6 +551,8 @@ class Strings extends Chars
 	startsWith: ( start ) -> Strings.startsWith @string, start
 
 	endsWith: ( ending ) -> Strings.endsWith @string, ending
+
+	# formatNumber: ( formatting ) -> Strings.format @string, formatting
 
 	setWrap: ( prepend, append ) ->
 		if _.isNull @wrapMethod then @wrapMethod= Strings.wrap prepend, append
