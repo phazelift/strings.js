@@ -286,6 +286,33 @@ console.log( new Strings(' \t ').isSpace() );
 // true
 ```
 
+**Strings.prototype.isUpper**
+> `<boolean> isUpper()`
+
+> Returns true if this.string contains only uppercase characters.
+```javascript
+console.log( new Strings('ABC').isUpper() );
+// true
+```
+
+**Strings.prototype.hasUpper**
+> `<boolean> hasUpper()`
+
+> Returns true if this.string contains at least one uppercase character.
+```javascript
+console.log( new Strings('aBc').hasUpper() );
+// true
+```
+
+**Strings.prototype.isLower**
+> `<boolean> isLower()`
+
+> Returns true if this.string contains only lowercase characters.
+```javascript
+console.log( new Strings('abc').isLower() );
+// true
+```
+
 **Strings.prototype.push**
 > `<this> push ( <string>/<number> string, [string1, ..., stringN] )`
 
@@ -643,6 +670,15 @@ ______________________________________________
 **Strings.isSpace**
 > `<boolean> Strings.isSpace( <string>/<number> string )`
 
+**Strings.isUpper**
+> `<boolean> Strings.isUpper( <string>/<number> string )`
+
+**Strings.hasUpper**
+> `<boolean> Strings.hasUpper( <string>/<number> string )`
+
+**Strings.isLower**
+> `<boolean> Strings.isLower( <string>/<number> string )`
+
 **Strings.xs**
 > `<string> Strings.xs( <string>/<number> string, <function> callback( <string> char, <number> index ){} )`
 
@@ -830,10 +866,15 @@ __________
 change log
 ==========
 
+**1.2.3**
+
+Added Strings.prototype.isUpper(), Strings.prototype.isLower(), Strings.isUpper() and Strings.isLower().
+They were missing after removal in 1.2.0... Also added Strings.hasUpper().
+___
 **1.2.2**
 
 Updated the included types.js to (the current) version 1.4.2
-
+___
 **1.2.0**
 
 Started improving the running-speed of all methods. It's a work in progress.

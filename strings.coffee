@@ -281,6 +281,10 @@ class Strings extends Chars
 
 	@isSpace: ( string ) -> /^[ \t]+$/g.test string
 
+	@hasUpper: ( string ) -> /[A-Z]+/g.test string
+	@isUpper: ( string ) -> /^[A-Z]+$/g.test string
+	@isLower: ( string ) -> /^[a-z]+$/g.test string
+
 	@xs: ( string= '', callback ) ->
 		string= _.forceString string
 		return '' if -1 is length= string.length- 1
@@ -495,6 +499,9 @@ class Strings extends Chars
 	isNumeric: -> Strings.isNumeric @string
 	isAlphaNumeric: -> Strings.isAlphaNumeric @string
 	isSpecial: -> Strings.isSpecial @string
+	isUpper: -> Strings.isUpper @string
+	hasUpper: -> Strings.hasUpper @string
+	isLower: -> Strings.isLower @string
 
 	isSpace: -> Strings.isSpace @string
 
