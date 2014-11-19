@@ -65,7 +65,7 @@ loading strings.js like so:
 var _= Strings.Types;
 ```
 
-The types.js API can be found in the phazelift/types.js repo.
+The types.js API can be found at: https://github.com/phazelift/types.js.
 
 Some examples:
 ------------
