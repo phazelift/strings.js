@@ -1,8 +1,7 @@
 strings.js
 ==========
 
-A flexible, robust and powerful Javascript string manipulation library. Contains the usual suspects and loads of
-very handy additions.
+A flexible, Javascript string manipulation library. Contains the usual suspects and quite some handy additions.
 
 String.prototype is not affected by strings.js
 ______________________________________________
@@ -32,7 +31,7 @@ var sparse= '  \t\t max.   1  \t  consecutive   \t \tspace! \t ';
 console.log( Strings.oneSpaceAndTrim(sparse) );
 // max 1 consecutive space!
 
-// there is much more! see below..
+// there is so much more, see below
 ```
 
 ___
@@ -58,12 +57,15 @@ To return the actual value of the string, one can use `.get()` or `.$` or `.stri
 Almost all functionality of Strings prototypes, and some extra functions, are available from Strings static
 function library.
 
-types.js is included in strings.js as it is the fundament for strings.js. types.js and some other included tools
-can be used as static methods from Strings. Descriptions for all included methods can be found in the API below.
-The types.js API can be found in the phazelift/types.js repo.
+Included:
+---------
+types.js essential type-checker/enforcer is included in strings.js. It is the fundament for strings.js and can be found after
+loading strings.js like so:
+```javascript
+var _= Strings.Types;
+```
 
-Still working on the API.. For now I recommend to check the Jasmine tests to see what strings.js is capable of, and have some
-fun playing it.
+The types.js API can be found in the phazelift/types.js repo.
 
 Some examples:
 ------------
@@ -104,15 +106,7 @@ Strings.times('A', 3);								// AAA
 s= Strings.random(20);								// j#4-s,t0]`bRd86!,>=Z (create password/random string)
 s= Strings.random(10, Strings.ASCII_RANGE_NUMBERS);
 													// 6206002371	(create random string in specific range)
-// etc...
-
-// The included libs/tools. Most methods can be directly used from Strings, only a few specific overloaded methods.
-Types= require("strings.js").Types;
-Chars= require("strings.js").Chars;
-
-// When I have a little time available I will try to update the examples to have it more meaningful and elaborate.
-// For now, check the API, there's a lot more!
-
+// find more examples in the API below
 ```
 ___
 API
@@ -858,7 +852,7 @@ ___________________
 _________________
 ##types.js
 
-> The full library (1.8kb) is included in strings.js. Check my phazelift repository for general info and API.
+> The full library (1.8kb) is included in strings.js. Check https://github.com/phazelift/types.js for general info and API.
 
 
 __________
