@@ -1,9 +1,18 @@
 strings.js
 ==========
 
-A flexible, Javascript string manipulation library. Contains the usual suspects and quite some handy additions.
+A flexible, Javascript string manipulation library. Contains the usual suspects and some handy additions.
 
-String.prototype is not affected by strings.js
+**key features:**
+- most methods are available both static and dynamic
+- most methods are chainable for the dynamic part
+- Strings is 1 based; [1] is the first character of the string, [-1] the last
+- can use negative numbers in almost all methods to target from the end of the string
+- can target with indexes and substring arguments mixed in some methods
+- all methods are dynamically type checked if needed
+- methods should always return the expected type
+
+***String.prototype is not affected by strings.js***
 ______________________________________________
 Some quick examples:
 ```javascript
