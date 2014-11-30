@@ -103,7 +103,7 @@ mapStringToNumber= ( array ) ->
 		array[ index ]= nr
 	return array.length
 
-#															_ (selection of tools.js)
+#															_ (selection of tools)
 
 class _ extends Types
 
@@ -446,17 +446,6 @@ class Strings extends Chars
 		ending= new RegExp Strings.regEscape( ending )+ '$'
 		return ending.test string
 
-	# @formatNumber: ( number, interval= 3 ) ->
-	# 	return number if '' is number= _.forceString number
-	# 	formatted= ''
-	# 	length= number.length- 1
-	# 	interval= _.forceNumber interval, 3
-	# 	for index in [0..length]
-	# 		formatted+= number[ index ]
-	# 		if ( (length- index)% interval is 0 ) and ( index < length )
-	# 			formatted+= '.'
-	# 	return formatted
-
 # test below this line:
 	@wrap: ( prepend= '', append= '' ) ->
 		wrapper= ( string ) -> Strings.create prepend, string, append
@@ -559,8 +548,6 @@ class Strings extends Chars
 
 	endsWith: ( ending ) -> Strings.endsWith @string, ending
 
-	# formatNumber: ( formatting ) -> Strings.format @string, formatting
-
 	setWrap: ( prepend, append ) ->
 		if _.isNull @wrapMethod then @wrapMethod= Strings.wrap prepend, append
 		else @wrapMethod.wrap prepend, append
@@ -587,5 +574,9 @@ Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
 
+
+if ( 'function' is typeof define ) and define.amd
+	define 'strings', [], -> Strings
+
 if window? then window.Strings= Strings
-else module.exports= Strings
+else if module? then module.exports= Strings

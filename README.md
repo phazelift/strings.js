@@ -44,9 +44,23 @@ console.log( Strings.oneSpaceAndTrim(sparse) );
 ```
 
 ___
-<br/>
+**node.js**
 Made for browser and/or node.js. You can use `npm install strings.js` if you like.
-<br/>
+
+**AMD**
+When using AMD, you can load strings.js like so:
+```javascript
+require.config({
+	paths: {
+		'strings', [ '../path/to/strings.min' ]
+	}
+});
+
+require( ['strings'], function( Strings ){
+	console.log( Strings.empty('') );
+	// true
+});
+```
 <br/>
 ___
 General description:
@@ -868,7 +882,10 @@ __________
 
 change log
 ==========
+**1.2.5**
 
+Added AMD support.
+___
 **1.2.3**
 
 Added Strings.prototype.isUpper(), Strings.prototype.isLower(), Strings.isUpper() and Strings.isLower().
