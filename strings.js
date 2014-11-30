@@ -1116,16 +1116,14 @@
 
   Strings.prototype.append = Strings.prototype.push;
 
-  if (('function' === typeof define) && define.amd) {
+  if ((typeof define !== "undefined" && define !== null) && ('function' === typeof define) && define.amd) {
     define('strings', [], function() {
       return Strings;
     });
-  }
-
-  if (typeof window !== "undefined" && window !== null) {
-    window.Strings = Strings;
   } else if (typeof module !== "undefined" && module !== null) {
     module.exports = Strings;
+  } else if (typeof window !== "undefined" && window !== null) {
+    window.Strings = Strings;
   }
 
 }).call(this);

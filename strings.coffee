@@ -575,8 +575,9 @@ Strings::crop= Strings::slice
 Strings::append= Strings::push
 
 
-if ( 'function' is typeof define ) and define.amd
+if define? and ( 'function' is typeof define ) and define.amd
 	define 'strings', [], -> Strings
-
-if window? then window.Strings= Strings
-else if module? then module.exports= Strings
+else if module?
+	module.exports= Strings
+else if window?
+	window.Strings= Strings
