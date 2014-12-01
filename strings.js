@@ -1123,6 +1123,7 @@
   } else if (typeof module !== "undefined" && module !== null) {
     module.exports = Strings;
   } else if (typeof window !== "undefined" && window !== null) {
+    window.Types = Types;
     window.Strings = Strings;
   }
 

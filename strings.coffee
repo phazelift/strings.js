@@ -574,10 +574,10 @@ Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
 
-
 if define? and ( 'function' is typeof define ) and define.amd
 	define 'strings', [], -> Strings
 else if module?
 	module.exports= Strings
 else if window?
-	window.Strings= Strings
+	window.Types	= Types
+	window.Strings	= Strings
