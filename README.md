@@ -52,7 +52,7 @@ When using AMD, you can load strings.js like so:
 ```javascript
 require.config({
 	paths: {
-		'strings', [ '../path/to/strings.min' ]
+		'strings', [ 'path/to/strings.min(.js)' ]
 	}
 });
 
