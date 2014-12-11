@@ -882,6 +882,10 @@ __________
 
 change log
 ==========
+**1.2.7**
+
+Updated the included types.js to (the current) version 1.5.0
+___
 **1.2.5**
 
 Added AMD support.
