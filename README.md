@@ -1,12 +1,13 @@
 strings.js
 ==========
 
-A flexible, Javascript string manipulation library. Contains the usual suspects and some handy additions.
+A friendly Javascript string manipulation library. No cryptic names, no methods returning undefined when you expect
+a string, etc.. Contains the usual suspects and some handy additions.
 
 **key features:**
 - most methods are available both static and dynamic
 - most methods are chainable for the dynamic part
-- Strings is 1 based; [1] is the first character of the string, [-1] the last
+- Strings is 1 based; 1 is the first character of the string, -1 the last
 - can use negative numbers in almost all methods to target from the end of the string
 - can target with indexes and substring arguments mixed in some methods
 - all methods are dynamically type checked if needed
