@@ -14,7 +14,7 @@ A flexible, Javascript string manipulation library. Contains the usual suspects 
 
 ***String.prototype is not affected by strings.js***
 ______________________________________________
-Some quick examples:
+### a quick example:
 ```javascript
 // discover strings:
 var strings= new Strings( 'asagcnaicrbtas' )
@@ -44,11 +44,14 @@ console.log( Strings.oneSpaceAndTrim(sparse) );
 ```
 
 ___
-**node.js**
-Made for browser and/or node.js. You can use `npm install strings.js` if you like.
+### node.js
 
-**AMD**
-When using AMD, you can load strings.js like so:
+Made for browser and/or node.js. You can use `npm install strings.js` at the base directory of your project, after that:
+```javascript
+var Strings= require( 'strings.js' );
+```
+
+### AMD
 ```javascript
 require.config({
 	paths: {
@@ -57,14 +60,13 @@ require.config({
 });
 
 require( ['strings'], function( Strings ){
-	console.log( Strings.empty('') );
-	// true
+	console.log( Strings.times(':)', 3) );
+	// :):):)
 });
 ```
 <br/>
 ___
-General description:
---------------------
+### general description:
 
 Because strings.js is build upon types.js it is very robust. Almost any String type argument accepts a Number type and viceversa.
 All input and output is checked for type validity. If you expect a `typeof 'string'`, you won't get `undefined` or
@@ -80,8 +82,8 @@ To return the actual value of the string, one can use `.get()` or `.$` or `.stri
 Almost all functionality of Strings prototypes, and some extra functions, are available from Strings static
 function library.
 
-Included:
----------
+### included:
+
 types.js essential type-checker/enforcer is included in strings.js. It is the fundament for strings.js and can be found after
 loading strings.js like so:
 ```javascript
@@ -90,8 +92,7 @@ var _= Strings.Types;
 
 The types.js API can be found at: https://github.com/phazelift/types.js.
 
-Some examples:
-------------
+### some more examples:
 ```javascript
 
 var Strings= require("strings.js");					// with node.js
@@ -103,13 +104,16 @@ s.lower('ello', 'trings').insert(' library', -1);	// Hello Strings library!
 s.lower('h').toCamel(' ').remove('!');				// helloStringsLibrary
 s.unCamel(' ').upper(1, 7).push('!');				// Hello Strings library!
 s.remove('Hello', 'library', ' ');					// Strings!
-s.prepend('reversed ').reverse();						// !sgnirtS desrever
+s.prepend('reversed ').reverse();					// !sgnirtS desrever
 s.shuffle();										// getriever!nrss dS (random on every run)
 s.set();											// (.set with no usable argument wipes the string)
 
-s.set('Strings!').setWrap('<3 ').wrap;				// <3 Strings! (.wrap only returns the wrapped string)
-s.applyWrap('I ', '!').get(88, 3, 4, 99);			// <3 (88 and 99 are out of range and thus ignored)
-s.get();											// I <3 Strings! (wrap was applied to this.string)
+// wrap 'Strings' .wrap returns the wrapped string
+s.set('Strings').setWrap('<3 ', '!').wrap;			// <3 Strings!
+
+// apply the wrap to s while wrapping it once again
+s.applyWrap('I ', '!!')
+s.get();											// I <3 Strings!!!
 
 // some static Methods
 // all comments reflect the value of s
@@ -139,8 +143,6 @@ In this API, the type of a dynamic Strings object is denoted with `<this>`. Ther
 `<this>` can be used for chaining.
 
 this.string represents the actual state of the internal dynamic string.
-
-This API is in development..
 ____
 **Strings** constructor
 > `<this> Strings( <string>/<number> string,  [string1, ..., stringN] )`
@@ -174,7 +176,7 @@ string.set('James ', 'Bond ', 'is ', 0, 0, 7);
 **Strings.prototype.sort**
 > `<this> sort()`
 
-> Returns this.string's characters sorted by it's ordinal value.
+> Returns this.string's characters sorted by their ordinal value.
 ```javascript
 var string= new Strings( 'sort', 'charcters', 'and', 5, 2, 9, 1 );
 console.log( string.sort().$ );
@@ -185,7 +187,6 @@ console.log( string.sort().$ );
 > `<this> random( <string>/<number> amount, <array> asciiRange= Chars.ASCII_RANGE_ALL )`
 
 > Applies a random string with amount characters within asciiRange. asciiRange is an Array with two indices; [min, max].
-> If you want a custom range, you can better use: new Strings('mysecret007shuffle').shuffle()
 ```javascript
 // 10 random special characters
 console.log( new Strings().random(10, Strings.ASCII_RANGE_SPECIAL_1) );
@@ -202,9 +203,7 @@ console.log( new Strings().random(10, Strings.ASCII_RANGE_SPECIAL_1) );
 ```javascript
 var string= new Strings('It is easy to change characters in any way!');
 string.xs( function(ch){
-	return (ch === ' ')
-		? ' * '
-		: true;
+	return (ch === ' ') ? ' * ' : true;
 });
 console.log( string.$ );
 // It * is * easy * to * change * characters * in * any * way!
@@ -601,15 +600,27 @@ console.log( new Strings('abc 123').endsWith('23') );
 > You can add to prepend and append (outwards) by calling .setWrap again.
 ```javascript
 var string= new Strings('<3').setWrap( 'she ', ' me');
+// string is unchanged
 console.log( string.$ );
 // <3
+
+// but .wrap shows the string wrapped
+console.log( string.wrap+ '!' );
+// she <3 me!
+
+// and why not wrap once more:
+string.setWrap('Will ', ' forever?');
 console.log( string.wrap );
-// she <3 me
-string.setWrap('would ', ' forever?');
-console.log( string.wrap );
-// would she <3 me forever?
+// Will she <3 me forever?
+
+// still not applied to string
 console.log( string.$+ '..' );
 // <3..
+
+// use .setWrap to apply the wrap to string
+string.applyWrap();
+console.log( string.$ );
+// Will she <3 me forever?
 ```
 
 **Strings.prototype.removeWrap**
@@ -875,7 +886,7 @@ ___________________
 _________________
 ##types.js
 
-> The full library (1.8kb) is included in strings.js. Check https://github.com/phazelift/types.js for general info and API.
+> The full library (~2kB) is included in strings.js. Check https://github.com/phazelift/types.js for general info and API.
 
 
 __________
