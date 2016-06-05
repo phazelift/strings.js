@@ -1,8 +1,8 @@
 strings.js
 ==========
+<br/>
 
-A friendly Javascript string manipulation library. No cryptic names, no methods returning undefined when you expect
-a string, etc.. Contains the usual suspects and some handy additions.
+A Javascript string manipulation library. No cryptic names, no methods returning undefined when you expect a string, etc.. Contains the usual suspects and some handy additions.
 
 **key features:**
 - most methods are available both static and dynamic
@@ -13,7 +13,8 @@ a string, etc.. Contains the usual suspects and some handy additions.
 - all methods are dynamically type checked if needed
 - methods should always return the expected type
 
-***String.prototype is not affected by strings.js***
+<br/>
+
 ______________________________________________
 ### a quick example:
 ```javascript
@@ -56,7 +57,7 @@ var Strings= require( 'strings.js' );
 ```javascript
 require.config({
 	paths: {
-		'strings', [ 'path/to/strings.min(.js)' ]
+		'strings', [ 'path/to/strings.min.js' ]
 	}
 });
 
@@ -85,10 +86,9 @@ function library.
 
 ### included:
 
-types.js essential type-checker/enforcer is included in strings.js. It is the fundament for strings.js and can be found after
-loading strings.js like so:
+types.js essential type-checker/enforcer is included in strings.js. It is the fundament for strings.js and can be found after loading strings.js. 
 ```javascript
-var _= Strings.Types;
+var types= Strings.Types;
 ```
 
 The types.js API can be found at: https://github.com/phazelift/types.js.
@@ -894,6 +894,16 @@ __________
 
 change log
 ==========
+**1.2.8**
+
+Removes the included types.js code. For node.js there are no changes, but if you want to load strings.js in the browser you'll now first have to load types.js:
+
+>```html
+<script src="your-path-to-js-libs/types.min.js"></script>
+<script src="your-path-to-js-libs/strings.min.js"></script>
+```
+
+---
 **1.2.7**
 
 Updated the included types.js to (the current) version 1.5.0
