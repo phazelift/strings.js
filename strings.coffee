@@ -378,6 +378,22 @@ class Strings extends Chars
 		ending= new RegExp Strings.regEscape( ending )+ '$'
 		return ending.test string
 
+
+	#
+	# checks wether the count for each specific character is equal for both strings
+	#
+	@charactersMatch: ( string1, string2 ) ->
+		return false if (not _.allString string1, string2) or (string1.length isnt string2.length)
+		string2= string2.split ''
+		for char in string1
+			return false if not string2.length
+			pos= string2.indexOf char
+			if pos > -1
+				string2.splice pos, 1
+			else return false
+		return true
+
+
 # test below this line:
 	@wrap: ( prepend= '', append= '' ) ->
 		wrapper= ( string ) -> Strings.create prepend, string, append
@@ -480,6 +496,8 @@ class Strings extends Chars
 
 	endsWith: ( ending ) -> Strings.endsWith @string, ending
 
+	charactersMatch: ( string ) -> Strings.charactersMatch @string, string
+
 	setWrap: ( prepend, append ) ->
 		if _.isNull @wrapMethod then @wrapMethod= Strings.wrap prepend, append
 		else @wrapMethod.wrap prepend, append
@@ -503,6 +521,7 @@ Object.defineProperty Strings::, 'wrap',
 Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
+
 
 
 if define? and ( 'function' is typeof define ) and define.amd

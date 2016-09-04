@@ -592,6 +592,15 @@ console.log( new Strings('abc 123').endsWith('23') );
 // true
 ```
 
+**Strings.prototype.charactersMatch**
+> `<boolean> charactersMatch( <string> string )`
+
+> Returns true if the count for each specific character in this.string is equal to the string given
+```javascript
+console.log( new Strings('abc').charactersMatch('cba') );
+// true
+```
+
 **Strings.prototype.setWrap**
 > `<this> setWrap( <string>/<number> prepend, <string>/<number> append )`
 
@@ -801,6 +810,10 @@ ______________________________________________
 **Strings.endsWith**
 > `<boolean> Strings.endsWith( <string>/<number> string, <string>/<number> end )`
 
+**Strings.charactersMatch**
+> `<boolean> Strings.charactersMatch( <string> string1, <string> string2 )`
+
+
 **Strings.wrap**
 > `<object> Strings.wrap( <string>/<number> prepend, <string>/<number> append )`
 
@@ -894,6 +907,13 @@ __________
 
 change log
 ==========
+
+
+**1.3.0**
+
+Adds charactersMatch method, now we can check for example wether 'cnei' matches 'nice' in length and characters used
+
+---
 **1.2.8**
 
 Removes the included types.js code. For node.js there are no changes, but if you want to load strings.js in the browser you'll now first have to load types.js:

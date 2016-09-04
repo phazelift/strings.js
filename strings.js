@@ -658,6 +658,27 @@
       return ending.test(string);
     };
 
+    Strings.charactersMatch = function(string1, string2) {
+      var char, j, len, pos;
+      if ((!_.allString(string1, string2)) || (string1.length !== string2.length)) {
+        return false;
+      }
+      string2 = string2.split('');
+      for (j = 0, len = string1.length; j < len; j++) {
+        char = string1[j];
+        if (!string2.length) {
+          return false;
+        }
+        pos = string2.indexOf(char);
+        if (pos > -1) {
+          string2.splice(pos, 1);
+        } else {
+          return false;
+        }
+      }
+      return true;
+    };
+
     Strings.wrap = function(prepend, append) {
       var wrapper;
       if (prepend == null) {
@@ -909,6 +930,10 @@
 
     Strings.prototype.endsWith = function(ending) {
       return Strings.endsWith(this.string, ending);
+    };
+
+    Strings.prototype.charactersMatch = function(string) {
+      return Strings.charactersMatch(this.string, string);
     };
 
     Strings.prototype.setWrap = function(prepend, append) {
