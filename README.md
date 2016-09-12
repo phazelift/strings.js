@@ -909,6 +909,11 @@ change log
 ==========
 
 
+**1.3.1**
+
+changes license to MIT
+
+---
 **1.3.0**
 
 Adds charactersMatch method, now we can check for example wether 'cnei' matches 'nice' in length and characters used
@@ -998,3 +1003,7 @@ Removed:
 from types.js.
 
 __________
+
+###license
+
+MIT
