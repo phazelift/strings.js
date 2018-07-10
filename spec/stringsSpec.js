@@ -1,6 +1,8 @@
 //
 // Jasmine tests for strings.js
 //
+const Strings= require( '../strings.js' );
+
 
 
 function testNoOrInvalidStringArguments( method ){

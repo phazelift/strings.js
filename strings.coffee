@@ -25,7 +25,8 @@
 
 "use strict"
 
-_= Types= require( 'types.js' );
+_= Types= require 'types.js'
+
 
 
 # returns the amount of successful parseInt's on array
@@ -125,7 +126,8 @@ class Chars extends _
 	@ordinal: ( char ) -> _.forceNumber _.forceString(char).charCodeAt(), 0
 
 	@random: ( range ) ->
-		range= _.forceArray range, Chars.ASCII_RANGE_ALL
+		if (not _.isArray(range)) or (range.length < 2)
+			range= Chars.ASCII_RANGE_ALL
 		min= _.limitNumber( range[0], range )
 		max= _.limitNumber( range[1], range )
 		return Chars.ascii _.randomNumber min, max
@@ -529,7 +531,6 @@ Object.defineProperty Strings::, 'wrap',
 Strings.crop= Strings.slice
 Strings::crop= Strings::slice
 Strings::append= Strings::push
-
 
 
 if define? and ( 'function' is typeof define ) and define.amd

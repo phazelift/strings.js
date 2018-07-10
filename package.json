@@ -4,7 +4,7 @@
   "description": "A Javascript string manipulation library",
   "main": "strings.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,8 @@
   "homepage": "https://github.com/phazelift/strings.js",
   "dependencies": {
     "types.js": "latest"
+  },
+  "devDependencies": {
+    "jasmine": "^3.1.0"
   }
 }
