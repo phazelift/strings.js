@@ -25,7 +25,7 @@
 
 "use strict"
 
-_= Types= require 'types.js'
+Types= require 'types.js'
 
 
 
@@ -40,14 +40,14 @@ mapStringToNumber= ( array ) ->
 
 #															_ (selection of tools)
 
-class _ extends Types
+class _
 
 	@inRange: ( nr, range ) ->
-		return false if (_.isNaN nr= parseInt nr, 10) or (mapStringToNumber( range ) < 2)
+		return false if (Types.isNaN nr= parseInt nr, 10) or (mapStringToNumber( range ) < 2)
 		return (nr >= range[0]) and (nr <= range[1])
 
 	@limitNumber= ( nr, range ) ->
-		nr= _.forceNumber nr, 0
+		nr= Types.forceNumber nr, 0
 		return nr if mapStringToNumber( range ) < 2
 		return range[0] if nr < range[0]
 		return range[1] if nr > range[1]
@@ -60,7 +60,7 @@ class _ extends Types
 		return Math.floor ( Math.random()* max )+ min
 
 	@shuffleArray: ( array ) ->
-		return [] if _.notArray(array) or array.length < 1
+		return [] if Types.notArray(array) or array.length < 1
 		length= array.length- 1
 		for i in [length..0]
 			rand= _.randomNumber 0, i
@@ -70,8 +70,8 @@ class _ extends Types
 		return array
 
 	@positiveIndex: ( index, max ) ->
-		return false if 0 is index= _.forceNumber index, 0
-		max= Math.abs _.forceNumber max
+		return false if 0 is index= Types.forceNumber index, 0
+		max= Math.abs Types.forceNumber max
 		if Math.abs( index ) <= max
 			return index- 1 if index > 0
 			return max+ index
@@ -100,13 +100,18 @@ class _ extends Types
 	@sortNoDupAndReverse: ( array, maxLength ) ->
 		processed= []
 		for value, index in array
-			value= _.forceNumber value
+			value= Types.forceNumber value
 			continue if value.void
 			if value <= maxLength
 				value= _.positiveIndex value, maxLength
-			processed.push _.forceNumber value, 0
+			processed.push Types.forceNumber value, 0
 		return _.noDupAndReverse _.insertSort processed
 
+	constructor: ->
+
+# copy types.js as static methods into _
+for type of Types then _[ type ] = Types[ type ]
+		
 #																	Chars (selection of chars.js)
 
 class Chars extends _
@@ -131,6 +136,9 @@ class Chars extends _
 		min= _.limitNumber( range[0], range )
 		max= _.limitNumber( range[1], range )
 		return Chars.ascii _.randomNumber min, max
+
+	constructor: ->
+		super()
 
 #
 #																	Strings
@@ -415,6 +423,7 @@ class Strings extends Chars
 # end of statics
 
 	constructor: ->
+		super()
 		@set.apply @, arguments
 		@wrapMethod= null
 		@crop= @slice
