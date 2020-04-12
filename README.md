@@ -19,12 +19,12 @@ ______________________________________________
 ### a quick example:
 ```javascript
 // discover strings:
-var strings= new Strings( 'asagcnaicrbtas' )
+var str= new Strings( 'asagcnaicrbtas' )
 	.reverse().remove('a','b','c').upper(1).append('!');
-console.log( strings.$ );
+console.log( str.$ );
 // Strings!
-strings.lower('s').remove('!').append( '.js' );
-console.log( strings.$ );
+str.lower('s').remove('!').append( '.js' );
+console.log( str.$ );
 // strings.js
 
 // 33 character password from all printable ascii:
@@ -74,7 +74,6 @@ Because strings.js is build upon types.js it is very robust. Almost any String t
 All input and output is checked for type validity. If you expect a `typeof 'string'`, you won't get `undefined` or
 any other type that can break following code.
 
-IMHO we shouldn't accept n-1 for strings in Javascript, it sucks and is not necessary.
 All string indexes in strings.js are 1 based and translated to 0 based internally. Negative indexes can be used in most functions. -1 references
 the last character in the string, 1 references the first character in the string.
 
